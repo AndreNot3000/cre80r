@@ -1,0 +1,26 @@
+{
+  "name": "@crea8or/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "start": "bun run dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crea8or/auth": "workspace:*",
+    "@crea8or/db": "workspace:*",
+    "@crea8or/validators": "workspace:*",
+    "hono": "^4.6.0",
+    "better-auth": "^1.0.0",
+    "@hono/zod-validator": "^0.4.0",
+    "drizzle-orm": "^0.36.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/bun": "latest"
+  }
+}

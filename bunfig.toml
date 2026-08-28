@@ -1,0 +1,5 @@
+[install]
+strict_ssl = false
+
+[install.lockfile]
+print = "yarn"

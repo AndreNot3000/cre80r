@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fef9ee;
+  --color-brand-100: #fdf0d4;
+  --color-brand-200: #f9dea3;
+  --color-brand-300: #f5c668;
+  --color-brand-400: #f0a93c;
+  --color-brand-500: #eb8e1c;
+  --color-brand-600: #d97212;
+  --color-brand-700: #b45510;
+  --color-brand-800: #924315;
+  --color-brand-900: #773814;
+  --color-brand-950: #411b07;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 30 85% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 30 85% 52%;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 30 85% 60%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 30 85% 60%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom High-Contrast Dark Toaster Styling */
+[data-sonner-toaster] [data-sonner-toast] {
+  background: #0c0d17 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-title] {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.8125rem !important;
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-description] {
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type="error"] {
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  background: #150a10 !important;
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type="success"] {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  background: #0a1612 !important;
+}

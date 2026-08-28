@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.turbo/
+.next/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.production
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# Drizzle
+drizzle/

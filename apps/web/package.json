@@ -1,0 +1,42 @@
+{
+  "name": "@crea8or/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crea8or/ui": "workspace:*",
+    "@crea8or/validators": "workspace:*",
+    "@crea8or/auth": "workspace:*",
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "better-auth": "^1.0.0",
+    "@tanstack/react-query": "^5.59.0",
+    "@tanstack/react-query-devtools": "^5.59.0",
+    "react-hook-form": "^7.53.0",
+    "@hookform/resolvers": "^3.9.0",
+    "zod": "^3.23.0",
+    "axios": "^1.7.0",
+    "lucide-react": "^0.462.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.0",
+    "date-fns": "^4.1.0",
+    "sonner": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.5.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "15.3.4"
+  }
+}
