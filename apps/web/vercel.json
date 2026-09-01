@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && bun install && bun run --cwd packages/validators build 2>/dev/null || true && bun run --cwd packages/auth build 2>/dev/null || true && bun run --cwd apps/web build",
-  "outputDirectory": "apps/web/.next",
+  "buildCommand": "cd ../.. && bun install && bun run --cwd apps/web build",
   "installCommand": "bun install",
-  "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ packages/"
+  "framework": "nextjs"
 }
