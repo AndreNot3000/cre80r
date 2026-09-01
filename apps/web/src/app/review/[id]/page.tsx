@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -23,12 +25,11 @@ import {
   RotateCcw,
   SkipBack,
   SkipForward,
-  MessageCircle,
-  Eye,
-  Lock,
   Loader2,
-  X,
-  CornerDownRight,
+  AlertCircle,
+  Activity,
+  Radio,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
@@ -36,30 +37,23 @@ import { useSession } from "@/lib/auth-client";
 type VideoComment = {
   id: string;
   videoReviewId: string;
-  timecode: number;
-  smpteTimecode: string;
+  timestampSeconds: number;
+  timecode: string;
   authorName: string;
-  authorRole: "creator" | "client" | "collaborator";
-  authorAvatar: string | null;
+  authorRole: "client" | "creator" | "editor";
   content: string;
-  isResolved: boolean;
-  resolvedAt: string | null;
-  parentId: string | null;
+  resolved: boolean;
+  drawingData?: any;
   createdAt: string;
 };
 
 type VideoReview = {
   id: string;
-  organizationId: string;
-  projectId: string | null;
   title: string;
-  videoUrl: string;
-  posterUrl: string | null;
   version: string;
+  videoUrl: string;
+  thumbnailUrl: string | null;
   durationSeconds: number;
-  fps: number;
-  allowComments: boolean;
-  allowDownloads: boolean;
   status: "in_review" | "approved" | "changes_requested";
   approvedAt: string | null;
   projectName?: string | null;

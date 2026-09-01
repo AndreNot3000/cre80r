@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+export const dynamic = "force-dynamic";
+
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -74,30 +76,24 @@ type ConfirmedBookingData = {
   invoice: {
     id: string;
     invoiceNumber: string;
-    currency: string;
-    logo: string | null;
-    avatar: string | null;
-    tagline: string | null;
-    location: string | null;
-    whatsapp: string | null;
-    instagram: string | null;
+    total: string;
   };
-  services: Array<{
+  client: {
     id: string;
     name: string;
-    description: string | null;
-    basePrice: string;
-    currency: string;
-    durationHours: number | null;
-    addOns: Array<{ name: string; price: number }> | null;
-    isActive: boolean;
-  }>;
+    email: string;
+    phone: string;
+  };
+  organization: {
+    name: string;
+    slug: string;
+    whatsapp: string;
+  };
 };
 
-// Available Add-Ons fallback
-const DEFAULT_ADDONS = [
-  { id: "def-add-1", name: "24-Hour Same-Day Teaser Reel (9:16 4K)", price: 120000, desc: "Delivered within 24h for social hype" },
-  { id: "def-add-2", name: "Licensed 4K FPV / Cinematic Drone Aerials", price: 150000, desc: "FAA/NCAA certified aerial video operator" },
+const DEFAULT_ADD_ONS = [
+  { id: "def-add-1", name: "Same-Day Social Media Teaser Reel (Reels/TikTok)", price: 150000, desc: "Delivered within 6 hours of shoot wrap" },
+  { id: "def-add-2", name: "4K Cinema Drone Aerial Operator (DJI Inspire/Mavic)", price: 120000, desc: "FAA/CAA licensed pilot + 4K ProRes aerials" },
   { id: "def-add-3", name: "Additional Second DP / Camera Operator", price: 180000, desc: "Ensures dual-angle multi-camera coverage" },
   { id: "def-add-4", name: "Raw Master Footage 1TB SSD Archive Delivery", price: 200000, desc: "Uncompressed B-Roll & raw clips on Samsung T7 SSD" },
   { id: "def-add-5", name: "Behind-The-Scenes 4K Mini-Documentary", price: 175000, desc: "Candid production moments & director commentary" },
