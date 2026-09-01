@@ -3,6 +3,7 @@ import { db } from "@crea8or/db/client";
 import { organizations, services, bookings, clients, leads, invoices } from "@crea8or/db/schema";
 import { eq, and } from "drizzle-orm";
 import { createPublicBookingSchema } from "@crea8or/validators";
+import { dispatchWhatsAppMessage } from "@/lib/whatsapp";
 
 export async function POST(request: NextRequest) {
   try {
@@ -143,6 +144,21 @@ export async function POST(request: NextRequest) {
         notes: `Booking Ref: ${booking.id} • Invoice: ${invoice.invoiceNumber}`,
       })
       .catch(() => {});
+
+    // 6. Dispatch Automated WhatsApp Confirmation
+    await dispatchWhatsAppMessage({
+      organizationId: org.id,
+      triggerEvent: "inquiry_created",
+      recipientPhone: data.clientPhone.trim(),
+      recipientName: data.clientName.trim(),
+      templateId: "tpl_welcome_intro_v1",
+      variables: {
+        client_name: data.clientName.trim(),
+        studio_name: org.name,
+        event_date: new Date(data.eventDate).toLocaleDateString("en-GB", { dateStyle: "medium" }),
+        rate_card_link: `${process.env.WEB_URL || "http://localhost:3000"}/b/${org.slug}`,
+      },
+    }).catch(() => {});
 
     // Reference ID
     const reference = `BK-${Date.now().toString().slice(-5)}-${org.slug.slice(0, 4).toUpperCase()}`;

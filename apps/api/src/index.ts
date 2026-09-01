@@ -20,6 +20,7 @@ import { galleryRoutes } from "./routes/galleries.js";
 import { reviewRoutes } from "./routes/reviews.js";
 import { expenseRoutes } from "./routes/expenses.js";
 import { showroomRoutes } from "./routes/showroom.js";
+import { whatsappRoutes } from "./routes/whatsapp.js";
 
 const app = new Hono();
 
@@ -59,6 +60,7 @@ app.route("/api/galleries", galleryRoutes);
 app.route("/api/reviews", reviewRoutes);
 app.route("/api/expenses", expenseRoutes);
 app.route("/api/showroom", showroomRoutes);
+app.route("/api/whatsapp", whatsappRoutes);
 
 // ─── 404 Fallback ─────────────────────────────────────────────────────────────
 

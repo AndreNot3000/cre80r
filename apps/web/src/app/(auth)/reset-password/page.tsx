@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -8,11 +8,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { resetPasswordSchema } from "@crea8or/validators";
 import { z } from "zod";
-import { ShieldCheck, CheckCircle2, Sparkles, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, CheckCircle2, Sparkles, Eye, EyeOff, Loader2 } from "lucide-react";
 
 type ResetForm = z.infer<typeof resetPasswordSchema>;
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
@@ -118,5 +118,19 @@ export default function ResetPasswordPage() {
         )}
       </form>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-20 flex justify-center items-center">
+          <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

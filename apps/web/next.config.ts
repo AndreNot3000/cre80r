@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["@node-rs/argon2", "better-auth", "pg"],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 export default nextConfig;

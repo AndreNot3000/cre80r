@@ -474,5 +474,55 @@ export const expenses = pgTable("expenses", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// ─── Studio Automations & WhatsApp Engine ─────────────────────────────────────
+
+export const automationTriggerEnum = pgEnum("automation_trigger", [
+  "inquiry_created",
+  "booking_confirmed",
+  "deposit_paid",
+  "callsheet_dispatched",
+  "shoot_reminder_48h",
+  "gallery_delivered",
+  "review_cut_approved",
+  "invoice_overdue",
+]);
+
+export const automationActionEnum = pgEnum("automation_action", [
+  "send_whatsapp",
+  "send_email",
+  "notify_crew",
+  "generate_callsheet",
+  "create_invoice",
+]);
+
+export const automations = pgTable("automations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  triggerEvent: automationTriggerEnum("trigger_event").notNull(),
+  actionType: automationActionEnum("action_type").notNull().default("send_whatsapp"),
+  config: jsonb("config").notNull().default({}), // { templateId, templateText, delayMinutes, recipientRole, variables }
+  isEnabled: boolean("is_enabled").notNull().default(true),
+  runCount: integer("run_count").notNull().default(0),
+  lastRunAt: timestamp("last_run_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const automationLogs = pgTable("automation_logs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id, { onDelete: "cascade" }),
+  automationId: uuid("automation_id").references(() => automations.id, { onDelete: "cascade" }),
+  triggerEvent: text("trigger_event").notNull(),
+  recipient: text("recipient").notNull(), // phone / email / crew
+  channel: text("channel").notNull().default("whatsapp"), // "whatsapp" | "email" | "sms"
+  status: text("status").notNull().default("success"), // "success" | "failed" | "queued"
+  payload: jsonb("payload"),
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+
 
 

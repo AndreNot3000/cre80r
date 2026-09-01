@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -23,11 +23,12 @@ import {
   RotateCcw,
   SkipBack,
   SkipForward,
-  Loader2,
-  AlertCircle,
-  Activity,
-  Radio,
+  MessageCircle,
   Eye,
+  Lock,
+  Loader2,
+  X,
+  CornerDownRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
@@ -35,23 +36,30 @@ import { useSession } from "@/lib/auth-client";
 type VideoComment = {
   id: string;
   videoReviewId: string;
-  timestampSeconds: number;
-  timecode: string;
+  timecode: number;
+  smpteTimecode: string;
   authorName: string;
-  authorRole: "client" | "creator" | "editor";
+  authorRole: "creator" | "client" | "collaborator";
+  authorAvatar: string | null;
   content: string;
-  resolved: boolean;
-  drawingData?: any;
+  isResolved: boolean;
+  resolvedAt: string | null;
+  parentId: string | null;
   createdAt: string;
 };
 
 type VideoReview = {
   id: string;
+  organizationId: string;
+  projectId: string | null;
   title: string;
-  version: string;
   videoUrl: string;
-  thumbnailUrl: string | null;
+  posterUrl: string | null;
+  version: string;
   durationSeconds: number;
+  fps: number;
+  allowComments: boolean;
+  allowDownloads: boolean;
   status: "in_review" | "approved" | "changes_requested";
   approvedAt: string | null;
   projectName?: string | null;
@@ -60,7 +68,7 @@ type VideoReview = {
 
 const DEMO_VIDEO_URL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
-export default function VideoReviewPlayerPage() {
+function VideoReviewPlayerContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const reviewId = params.id as string;
@@ -806,3 +814,21 @@ export default function VideoReviewPlayerPage() {
     </div>
   );
 }
+
+export default function VideoReviewPlayerPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#07080d] text-white flex flex-col items-center justify-center space-y-4">
+          <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
+          <p className="text-xs text-slate-400 tracking-wider uppercase font-semibold">
+            Loading Video Review HUD...
+          </p>
+        </div>
+      }
+    >
+      <VideoReviewPlayerContent />
+    </Suspense>
+  );
+}
+

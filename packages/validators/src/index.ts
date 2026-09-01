@@ -435,3 +435,36 @@ export const createPublicBookingSchema = z.object({
   depositMode: z.enum(["50", "100"]).default("50"),
   currency: currencyEnumSchema.default("NGN"),
 });
+
+// ─── Studio Automations & WhatsApp Engine ─────────────────────────────────────
+
+export const automationTriggerEnumSchema = z.enum([
+  "inquiry_created",
+  "booking_confirmed",
+  "deposit_paid",
+  "callsheet_dispatched",
+  "shoot_reminder_48h",
+  "gallery_delivered",
+  "review_cut_approved",
+  "invoice_overdue",
+]);
+
+export const automationActionEnumSchema = z.enum([
+  "send_whatsapp",
+  "send_email",
+  "notify_crew",
+  "generate_callsheet",
+  "create_invoice",
+]);
+
+export const createAutomationSchema = z.object({
+  name: z.string().min(1, "Automation recipe name is required"),
+  description: z.string().nullable().optional(),
+  triggerEvent: automationTriggerEnumSchema,
+  actionType: automationActionEnumSchema.default("send_whatsapp"),
+  config: z.record(z.any()).default({}),
+  isEnabled: z.boolean().default(true),
+});
+
+export const updateAutomationSchema = createAutomationSchema.partial();
+

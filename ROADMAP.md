@@ -283,13 +283,14 @@ c:\Users\hp\Downloads\cre80r
 * **Tech Stack**: WhatsApp Cloud API, cron/queue jobs, AI prompt generation.
 
 #### Section 8A: Studio Automations (`/automations`)
-- [ ] **Card 8.1 — Visual Automation Recipes**
+- [x] **Card 8.1 — Visual Automation Recipes**
   - **Route**: `apps/web/src/app/(dashboard)/automations/page.tsx`
-  - **Features**: Pre-built recipes (*"When inquiry arrives → Send WhatsApp instant intro"*, *"48 hours before shoot → Dispatch Call Sheet to crew"*).
+  - **URL**: `http://localhost:3000/automations`
+  - **Features**: Visual trigger-and-action recipe cards, active/pause switches, test run simulator, 4 hero studio time-saved metrics, live delivery activity ledger, and custom automation builder modal.
 
-- [ ] **Card 8.2 — WhatsApp Business Cloud Integration**
-  - **API Route**: `apps/api/src/routes/whatsapp.ts`
-  - **Features**: Template messages for booking confirmations, contracts, and payment links.
+- [x] **Card 8.2 — WhatsApp Business Cloud Integration**
+  - **API Route**: `apps/api/src/routes/whatsapp.ts`, `apps/web/src/lib/whatsapp.ts`
+  - **Features**: Meta WhatsApp Cloud API v20.0 helper, standard message template interpolation engine, Webhook verification & delivery status tracking (`sent` ➔ `delivered` ➔ `read`), and automated dispatch triggers on booking creation.
 
 ---
 

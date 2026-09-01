@@ -74,30 +74,36 @@ type ConfirmedBookingData = {
   invoice: {
     id: string;
     invoiceNumber: string;
-    total: string;
+    currency: string;
+    logo: string | null;
+    avatar: string | null;
+    tagline: string | null;
+    location: string | null;
+    whatsapp: string | null;
+    instagram: string | null;
   };
-  client: {
+  services: Array<{
     id: string;
     name: string;
-    email: string;
-    phone: string;
-  };
-  organization: {
-    name: string;
-    slug: string;
-    whatsapp: string;
-  };
+    description: string | null;
+    basePrice: string;
+    currency: string;
+    durationHours: number | null;
+    addOns: Array<{ name: string; price: number }> | null;
+    isActive: boolean;
+  }>;
 };
 
-const DEFAULT_ADD_ONS = [
-  { id: "def-add-1", name: "Same-Day Social Media Teaser Reel (Reels/TikTok)", price: 150000, desc: "Delivered within 6 hours of shoot wrap" },
-  { id: "def-add-2", name: "4K Cinema Drone Aerial Operator (DJI Inspire/Mavic)", price: 120000, desc: "FAA/CAA licensed pilot + 4K ProRes aerials" },
+// Available Add-Ons fallback
+const DEFAULT_ADDONS = [
+  { id: "def-add-1", name: "24-Hour Same-Day Teaser Reel (9:16 4K)", price: 120000, desc: "Delivered within 24h for social hype" },
+  { id: "def-add-2", name: "Licensed 4K FPV / Cinematic Drone Aerials", price: 150000, desc: "FAA/NCAA certified aerial video operator" },
   { id: "def-add-3", name: "Additional Second DP / Camera Operator", price: 180000, desc: "Ensures dual-angle multi-camera coverage" },
   { id: "def-add-4", name: "Raw Master Footage 1TB SSD Archive Delivery", price: 200000, desc: "Uncompressed B-Roll & raw clips on Samsung T7 SSD" },
   { id: "def-add-5", name: "Behind-The-Scenes 4K Mini-Documentary", price: 175000, desc: "Candid production moments & director commentary" },
 ];
 
-export default function PublicBookingPortalPage() {
+function BookingPortalContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -1148,3 +1154,21 @@ export default function PublicBookingPortalPage() {
     </div>
   );
 }
+
+export default function PublicBookingPortalPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#07080d] text-white flex flex-col items-center justify-center space-y-4">
+          <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
+          <p className="text-xs text-slate-400 tracking-wider uppercase font-semibold">
+            Loading Booking Engine...
+          </p>
+        </div>
+      }
+    >
+      <BookingPortalContent />
+    </Suspense>
+  );
+}
+

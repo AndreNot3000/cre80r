@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Globe,
   ExternalLink,
+  Zap,
 } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 
@@ -35,6 +36,7 @@ const navigation = [
   { name: "Clients Directory", href: "/clients", icon: Users },
   { name: "Bookings & Calendar", href: "/bookings", icon: Calendar },
   { name: "Client Messages", href: "/messages", icon: MessageSquare },
+  { name: "Studio Automations", href: "/automations", icon: Zap },
   { name: "Services & Packages", href: "/services", icon: Package },
   { name: "Quotes & Proposals", href: "/quotes", icon: FileText },
   { name: "Invoices & Payments", href: "/invoices", icon: CreditCard },
