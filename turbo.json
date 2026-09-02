@@ -1,6 +1,25 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "DATABASE_URL",
+    "BETTER_AUTH_SECRET",
+    "NEXT_PUBLIC_APP_URL",
+    "API_URL",
+    "NEXT_PUBLIC_API_URL",
+    "PAYSTACK_SECRET_KEY",
+    "PAYSTACK_PUBLIC_KEY",
+    "NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY",
+    "WHATSAPP_PHONE_NUMBER_ID",
+    "WHATSAPP_API_TOKEN",
+    "WHATSAPP_VERIFY_TOKEN",
+    "RESEND_API_KEY",
+    "OPENAI_API_KEY",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_REGION",
+    "AWS_S3_BUCKET"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
