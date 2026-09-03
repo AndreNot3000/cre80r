@@ -12,13 +12,16 @@ const PUBLIC_PATHS = [
   "/onboarding",
 ];
 
-// Route prefixes that are always public (client portals)
+// Route prefixes that are always public (client portals & API routes)
 const PUBLIC_PREFIXES = [
-  "/api/auth", // Better Auth API routes — must always be accessible
+  "/api/",     // All API routes handle their own auth checks
   "/b/",       // Public booking pages
   "/p/",       // Public portfolio pages
   "/g/",       // Public gallery pages
   "/review/",  // Public video review pages
+  "/i/",       // Public invoice pages
+  "/c/",       // Public call sheet pages
+  "/q/",       // Public quote & proposal pages
 ];
 
 export function middleware(request: NextRequest) {
@@ -40,9 +43,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Better Auth sets this httpOnly cookie on successful login/register
-  // It is a real token — not a fake "active" string
-  const sessionToken = request.cookies.get("better-auth.session_token")?.value;
+  // Better Auth session cookies:
+  // On localhost (HTTP): better-auth.session_token
+  // On production (HTTPS): __Secure-better-auth.session_token
+  const sessionToken =
+    request.cookies.get("__Secure-better-auth.session_token")?.value ||
+    request.cookies.get("better-auth.session_token")?.value ||
+    request.cookies.get("__Secure-better_auth.session_token")?.value ||
+    request.cookies.get("better_auth.session_token")?.value ||
+    request.cookies.get("crea8or_session")?.value;
 
   if (!sessionToken) {
     const loginUrl = new URL("/login", request.url);
