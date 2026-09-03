@@ -7,7 +7,7 @@ import * as schema from "@crea8or/db/schema";
 
 export const auth = betterAuth({
   // The URL where this app runs — Next.js handles /api/auth/* routes
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   basePath: "/api/auth",
 
   // Secret used to sign session tokens — must match across all restarts
@@ -35,6 +35,17 @@ export const auth = betterAuth({
     autoSignIn: true, // Automatically sign in after registration
   },
 
+  socialProviders: {
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          google: {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          },
+        }
+      : {}),
+  },
+
   plugins: [
     organization({
       allowUserToCreateOrganization: true,
@@ -45,7 +56,13 @@ export const auth = betterAuth({
     }),
   ],
 
-  trustedOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://cre80r-web-iota.vercel.app",
+    ...(process.env.NEXT_PUBLIC_APP_URL ? [process.env.NEXT_PUBLIC_APP_URL] : []),
+    ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
