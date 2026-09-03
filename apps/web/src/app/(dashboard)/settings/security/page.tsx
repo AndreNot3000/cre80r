@@ -17,6 +17,7 @@ import {
   Copy,
   Check,
   Loader2,
+  Building2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient, useSession } from "@/lib/auth-client";
@@ -235,6 +236,24 @@ export default function SecuritySettingsPage() {
         <p className="text-xs text-slate-400 mt-1">
           Manage your password credentials, 2-factor authentication, and active logged-in device sessions.
         </p>
+      </div>
+
+      {/* ─── Settings Sub-Navigation Tabs ──────────────────────────────────── */}
+      <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto">
+        <Link
+          href="/settings"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent transition shrink-0"
+        >
+          <Building2 className="w-3.5 h-3.5 text-slate-400" />
+          <span>Studio Branding & Profile</span>
+        </Link>
+        <Link
+          href="/settings/security"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-violet-600/15 text-violet-300 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.15)] shrink-0"
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Security & 2FA</span>
+        </Link>
       </div>
 
       {/* 1. TWO-FACTOR AUTHENTICATION */}

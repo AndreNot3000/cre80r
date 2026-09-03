@@ -165,6 +165,24 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* ─── Settings Sub-Navigation Tabs ──────────────────────────────────── */}
+      <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto">
+        <Link
+          href="/settings"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-violet-600/15 text-violet-300 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.15)] shrink-0"
+        >
+          <Building2 className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Studio Branding & Profile</span>
+        </Link>
+        <Link
+          href="/settings/security"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent transition shrink-0"
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+          <span>Security & 2FA</span>
+        </Link>
+      </div>
+
       <form onSubmit={handleSave} className="space-y-6">
         {/* 1. Account & Identity Overview */}
         <div className="bg-[#0c0d17] rounded-3xl border border-white/[0.08] p-6 shadow-[0_0_30px_rgba(0,0,0,0.5)] space-y-4">
@@ -204,6 +222,19 @@ export default function SettingsPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-violet-400" />
+              <span className="text-xs text-slate-300">Account Security & Two-Factor Authentication</span>
+            </div>
+            <Link
+              href="/settings/security"
+              className="text-xs font-semibold text-violet-400 hover:text-violet-300 underline underline-offset-4 flex items-center gap-1 transition"
+            >
+              Configure 2FA & Password →
+            </Link>
           </div>
         </div>
 
