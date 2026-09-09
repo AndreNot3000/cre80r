@@ -1,5 +1,6 @@
 import CinematicHero from "@/components/landing/CinematicHero";
 import { Navbar } from "@/components/landing/Navbar";
+import { AuroraBackground } from "@/components/landing/AuroraBackground";
 import { TrustSection } from "@/components/landing/TrustSection";
 import { ProblemSection } from "@/components/landing/ProblemSection";
 import { Features } from "@/components/landing/Features";
@@ -26,8 +27,8 @@ export default function LandingPage() {
       {/* Cinematic hero — full screen, no boxed container */}
       <CinematicHero />
 
-      {/* Rest of landing page below the hero experience */}
-      <div className="bg-[#07080d] text-white selection:bg-violet-500 selection:text-white">
+      {/* Rest of landing page with luminous Aurora background */}
+      <AuroraBackground className="selection:bg-violet-500 selection:text-white">
         {/* Social Proof & Metrics */}
         <TrustSection />
 
@@ -63,7 +64,7 @@ export default function LandingPage() {
 
         {/* Footer */}
         <Footer />
-      </div>
+      </AuroraBackground>
     </div>
   );
 }
