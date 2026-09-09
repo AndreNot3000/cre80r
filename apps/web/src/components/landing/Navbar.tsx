@@ -2,40 +2,58 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible]         = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      // Only show navbar once the user has truly scrolled past the hero (> 80px).
+      // During the hero lens expansion the page is locked at scrollY = 0,
+      // so the navbar stays completely invisible until expansion is done.
+      setVisible(window.scrollY > 80);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { name: "Platform", href: "#features" },
-    { name: "Workflows", href: "#workflows" },
-    { name: "Client Delivery", href: "#delivery" },
-    { name: "AI Assistant", href: "#ai" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "FAQ", href: "#faq" },
+    { name: "Platform",        href: "#features"  },
+    { name: "Workflows",       href: "#workflows" },
+    { name: "Client Delivery", href: "#delivery"  },
+    { name: "AI Assistant",    href: "#ai"        },
+    { name: "Pricing",         href: "#pricing"   },
+    { name: "FAQ",             href: "#faq"       },
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#090A10]/80 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
-          : "bg-transparent border-b border-transparent"
-      }`}
+      style={{
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        zIndex:          200,
+        // Slide + fade in only when past the hero
+        opacity:         visible ? 1 : 0,
+        transform:       visible ? "translateY(0)" : "translateY(-12px)",
+        pointerEvents:   visible ? "auto" : "none",
+        transition:      "opacity 0.35s ease, transform 0.35s ease",
+        // Frosted dark glass look
+        background:      "rgba(9, 10, 16, 0.75)",
+        backdropFilter:  "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderBottom:    "1px solid rgba(255,255,255,0.07)",
+        boxShadow:       "0 4px 30px rgba(0,0,0,0.5)",
+        fontFamily:      "Arial, Helvetica, sans-serif",
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+
+        {/* ── Brand Logo ─────────────────────────────── */}
+        <Link href="/" className="flex items-center gap-2 group" style={{ textDecoration: "none" }}>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 p-[1px] shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-transform group-hover:scale-105">
             <div className="w-full h-full bg-[#0c0d15] rounded-[11px] flex items-center justify-center">
               <span className="font-extrabold text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-300">
@@ -53,13 +71,14 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
+        {/* ── Desktop Nav Links ───────────────────────── */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group py-1"
+              style={{ textDecoration: "none" }}
             >
               {link.name}
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-violet-500 to-cyan-400 transition-all duration-300 group-hover:w-full" />
@@ -67,17 +86,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Action Buttons */}
+        {/* ── Action Buttons ──────────────────────────── */}
         <div className="hidden md:flex items-center gap-4">
           <Link
             href="/login"
             className="text-sm font-medium text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors hover:bg-white/[0.04]"
+            style={{ textDecoration: "none" }}
           >
             Sign In
           </Link>
           <Link
             href="/register"
             className="relative group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white overflow-hidden shadow-[0_0_25px_rgba(124,58,237,0.4)] transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.7)] hover:scale-[1.02]"
+            style={{ textDecoration: "none" }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 transition-all duration-300 group-hover:opacity-90" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent)] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -88,7 +109,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* ── Mobile Hamburger ────────────────────────── */}
         <div className="flex md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -100,15 +121,24 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0a0b12]/95 backdrop-blur-2xl border-b border-white/[0.08] px-6 py-6 space-y-4">
+      {/* ── Mobile Drawer ───────────────────────────────── */}
+      <div
+        style={{
+          overflow:   "hidden",
+          maxHeight:  mobileMenuOpen ? "480px" : "0",
+          opacity:    mobileMenuOpen ? 1 : 0,
+          transition: "max-height 0.35s ease, opacity 0.25s ease",
+        }}
+        className="md:hidden bg-[#0a0b12]/95 backdrop-blur-2xl border-b border-white/[0.08]"
+      >
+        <div className="px-6 py-6 space-y-4">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
               className="block text-base font-medium text-slate-200 hover:text-violet-400 py-2"
+              style={{ textDecoration: "none" }}
             >
               {link.name}
             </Link>
@@ -118,6 +148,7 @@ export function Navbar() {
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center py-2.5 rounded-xl text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08]"
+              style={{ textDecoration: "none" }}
             >
               Sign In
             </Link>
@@ -125,12 +156,13 @@ export function Navbar() {
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600"
+              style={{ textDecoration: "none" }}
             >
               Get Started Free
             </Link>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

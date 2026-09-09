@@ -1,4 +1,5 @@
 import CinematicHero from "@/components/landing/CinematicHero";
+import { Navbar } from "@/components/landing/Navbar";
 import { TrustSection } from "@/components/landing/TrustSection";
 import { ProblemSection } from "@/components/landing/ProblemSection";
 import { Features } from "@/components/landing/Features";
@@ -19,7 +20,10 @@ import { Footer } from "@/components/landing/Footer";
 export default function LandingPage() {
   return (
     <div className="relative overflow-x-hidden font-sans antialiased" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
-      {/* Cinematic hero — full screen, no navbar, no boxed container */}
+      {/* Smart navbar — invisible on hero, slides in when scrolled past it */}
+      <Navbar />
+
+      {/* Cinematic hero — full screen, no boxed container */}
       <CinematicHero />
 
       {/* Rest of landing page below the hero experience */}
