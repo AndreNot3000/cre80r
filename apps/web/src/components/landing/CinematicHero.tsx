@@ -9,37 +9,52 @@ import { motion, AnimatePresence } from "framer-motion";
 type MediaMode = "video" | "image";
 
 /* ─────────────────────────────────────────────────────────────
-   CONSTANTS
+   CONSTANTS  ← camera / photography themed
 ───────────────────────────────────────────────────────────── */
+
+// Video mode
 const VIDEO_URL = "https://www.pexels.com/download/video/17828727/";
-const VIDEO_BG  = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=2400&q=90";
-const IMAGE_SRC = "https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=85&w=1800&auto=format&fit=crop";
-const IMAGE_BG  = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2400&auto=format&fit=crop";
+
+// Dark moody bokeh studio atmosphere
+const VIDEO_BG =
+  "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=2400&q=90";
+
+// Image mode — front element of a camera lens (aperture view)
+const IMAGE_SRC =
+  "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1800&q=90";
+
+// Photographer in action wide scene
+const IMAGE_BG =
+  "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=2400&q=90";
 
 const BREAKPOINT = 768;
 
 /* ─────────────────────────────────────────────────────────────
-   HELPER
+   HELPERS
 ───────────────────────────────────────────────────────────── */
 function clamp(val: number, min: number, max: number) {
   return Math.min(Math.max(val, min), max);
+}
+
+// Interpolate between two numbers
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
 }
 
 /* ─────────────────────────────────────────────────────────────
    COMPONENT
 ───────────────────────────────────────────────────────────── */
 export default function CinematicHero() {
-  const [progress, setProgress] = useState(0);       // 0 → 1
+  const [progress, setProgress] = useState(0);
   const [mode, setMode]         = useState<MediaMode>("video");
-  const [expanded, setExpanded] = useState(false);   // fully expanded flag
+  const [expanded, setExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const progressRef  = useRef(0);
-  const expandedRef  = useRef(false);
-  const touchStartY  = useRef<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
+  const expandedRef = useRef(false);
+  const touchStartY = useRef<number | null>(null);
 
-  /* ── detect mobile ───────────────────────────────────────── */
+  /* ── detect mobile ──────────────────────────────────── */
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < BREAKPOINT);
     check();
@@ -47,7 +62,7 @@ export default function CinematicHero() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* ── sync progress → expandedRef ────────────────────────── */
+  /* ── apply progress ─────────────────────────────────── */
   const applyProgress = useCallback((p: number) => {
     const clamped = clamp(p, 0, 1);
     progressRef.current = clamped;
@@ -56,32 +71,30 @@ export default function CinematicHero() {
     if (clamped >= 1 && !expandedRef.current) {
       expandedRef.current = true;
       setExpanded(true);
-      document.body.style.overflow     = "";
+      document.body.style.overflow          = "";
       document.body.style.overscrollBehavior = "";
     } else if (clamped < 1 && expandedRef.current) {
       expandedRef.current = false;
       setExpanded(false);
-      document.body.style.overflow     = "hidden";
+      document.body.style.overflow          = "hidden";
       document.body.style.overscrollBehavior = "none";
     }
   }, []);
 
-  /* ── lock / unlock body scroll ──────────────────────────── */
+  /* ── lock body initially ────────────────────────────── */
   useEffect(() => {
-    document.body.style.overflow        = "hidden";
+    document.body.style.overflow          = "hidden";
     document.body.style.overscrollBehavior = "none";
     return () => {
-      document.body.style.overflow        = "";
+      document.body.style.overflow          = "";
       document.body.style.overscrollBehavior = "";
     };
   }, []);
 
-  /* ── wheel handler ───────────────────────────────────────── */
+  /* ── wheel ──────────────────────────────────────────── */
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (expandedRef.current) {
-        // allow normal scrolling once expanded —
-        // but intercept upward scroll at top to collapse
         if (window.scrollY <= 0 && e.deltaY < 0) {
           e.preventDefault();
           applyProgress(progressRef.current + e.deltaY * 0.0009);
@@ -93,37 +106,31 @@ export default function CinematicHero() {
       window.scrollTo(0, 0);
       applyProgress(progressRef.current + e.deltaY * 0.0009);
     };
-
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
   }, [applyProgress]);
 
-  /* ── touch handler ───────────────────────────────────────── */
+  /* ── touch ──────────────────────────────────────────── */
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
     };
-
     const onTouchMove = (e: TouchEvent) => {
       if (touchStartY.current === null) return;
-      const currentY = e.touches[0].clientY;
-      const deltaY   = touchStartY.current - currentY; // positive = swipe up
-      touchStartY.current = currentY;
-
+      const delta = touchStartY.current - e.touches[0].clientY;
+      touchStartY.current = e.touches[0].clientY;
       if (expandedRef.current) {
-        if (window.scrollY <= 0 && deltaY < -20) {
+        if (window.scrollY <= 0 && delta < -20) {
           e.preventDefault();
-          applyProgress(progressRef.current + deltaY * 0.008);
+          applyProgress(progressRef.current + delta * 0.008);
           window.scrollTo(0, 0);
         }
         return;
       }
       e.preventDefault();
       window.scrollTo(0, 0);
-      const sensitivity = deltaY > 0 ? 0.005 : 0.008;
-      applyProgress(progressRef.current + deltaY * sensitivity);
+      applyProgress(progressRef.current + delta * (delta > 0 ? 0.005 : 0.008));
     };
-
     const onTouchEnd = () => { touchStartY.current = null; };
 
     window.addEventListener("touchstart", onTouchStart, { passive: false });
@@ -136,11 +143,11 @@ export default function CinematicHero() {
     };
   }, [applyProgress]);
 
-  /* ── switch mode: reset progress & scroll to top ────────── */
+  /* ── switch mode ────────────────────────────────────── */
   const switchMode = (m: MediaMode) => {
     if (m === mode) return;
     window.scrollTo(0, 0);
-    document.body.style.overflow        = "hidden";
+    document.body.style.overflow          = "hidden";
     document.body.style.overscrollBehavior = "none";
     expandedRef.current = false;
     setExpanded(false);
@@ -149,12 +156,13 @@ export default function CinematicHero() {
     setMode(m);
   };
 
-  /* ─────────────────────────────────────────────────────────
-     DERIVED DIMENSIONS
-  ───────────────────────────────────────────────────────────*/
+  /* ═══════════════════════════════════════════════════════
+     DERIVED VISUAL VALUES
+  ═══════════════════════════════════════════════════════ */
   const vw = typeof window !== "undefined" ? window.innerWidth  : 1440;
   const vh = typeof window !== "undefined" ? window.innerHeight : 900;
 
+  // ── Card dimensions ──────────────────────────────────
   const rawW = isMobile
     ? 300 + progress * 650
     : 300 + progress * 1250;
@@ -162,64 +170,82 @@ export default function CinematicHero() {
     ? 400 + progress * 200
     : 400 + progress * 400;
 
-  const maxW = 0.95 * vw;
-  const maxH = 0.85 * vh;
+  const maxW   = 0.95 * vw;
+  const maxH   = 0.85 * vh;
+  const mediaW = Math.min(rawW, maxW);
+  const mediaH = Math.min(rawH, maxH);
 
-  const mediaW  = Math.min(rawW, maxW);
-  const mediaH  = Math.min(rawH, maxH);
-  const borderR = 16 - progress * 14;   // 16px → ~2px as it expands
+  // ── LENS IRIS: starts as a tight pill/circle, opens into widescreen rect ──
+  // At progress=0 → 150px radius (looks like a lens aperture on portrait card)
+  // At progress=1 → 8px radius (cinematic landscape frame)
+  const borderR = Math.max(8, lerp(150, 8, progress));
 
-  /* ── title movement ─────────────────────────────────────── */
-  const titleMove = isMobile ? 180 : 150;
-  const titleX    = progress * titleMove;
+  // ── Inner media ZOOM: starts zoomed in, pulls back as lens "opens" ──
+  // Feels like the camera is focusing / zooming through the lens
+  const innerScale = lerp(1.45, 1.0, progress);
 
-  /* ── scroll indicator position ──────────────────────────── */
-  const displayedH      = Math.min(rawH, maxH);
-  const indicatorTop    = vh / 2 + displayedH / 2 + 34;
-  const showIndicator   = progress < 0.16;
+  // ── Lens glow shadow: amber/gold at rest, deep cinematic at full ──
+  const glowR   = Math.round(lerp(255, 0,   progress));
+  const glowG   = Math.round(lerp(185, 0,   progress));
+  const glowB   = Math.round(lerp(30,  0,   progress));
+  const glowAlpha = lerp(0.65, 0, progress);
+  const glowBlur  = lerp(80, 0,  progress);
+  const lensGlow  = `0 0 ${glowBlur}px rgba(${glowR},${glowG},${glowB},${glowAlpha})`;
+  const baseShadow = `0 30px 100px rgba(0,0,0,${lerp(0.3, 0.55, progress)})`;
+  const shadow     = `${lensGlow}, ${baseShadow}`;
 
-  /* ── background fade ────────────────────────────────────── */
+  // ── Aperture ring: decorative outer ring that fades as it expands ──
+  const ringOpacity = lerp(0.7, 0, Math.min(progress * 2.5, 1));
+  const ringSize    = lerp(1.0, 1.4, Math.min(progress * 1.5, 1));
+
+  // ── Background ───────────────────────────────────────
   const bgOpacity = 1 - progress;
   const bgScale   = 1 + progress * 0.05;
 
-  /* ── video overlay opacity ──────────────────────────────── */
-  const videoOverlayOpacity = mode === "video"
-    ? 0.42 - progress * 0.26
-    : 0.50 - progress * 0.28;
+  // ── Overlay on media ─────────────────────────────────
+  const mediaOverlay = mode === "video"
+    ? lerp(0.52, 0.18, progress)
+    : lerp(0.55, 0.20, progress);
 
-  /* ── titles ─────────────────────────────────────────────── */
-  const line1 = mode === "video" ? "Beyond"      : "Into";
-  const line2 = mode === "video" ? "the Visible" : "the Unknown";
+  // ── Title split movement ──────────────────────────────
+  const titleMove = isMobile ? 180 : 150;
+  const titleX    = progress * titleMove;
 
-  /* ─────────────────────────────────────────────────────────
+  // ── Scroll indicator position ─────────────────────────
+  const displayedH    = Math.min(rawH, maxH);
+  const indicatorTop  = vh / 2 + displayedH / 2 + 34;
+  const showIndicator = progress < 0.16;
+
+  // ── Title copy (camera-themed) ────────────────────────
+  const line1 = mode === "video" ? "Frame"   : "Capture";
+  const line2 = mode === "video" ? "the Moment" : "Everything";
+
+  /* ═══════════════════════════════════════════════════════
      RENDER
-  ───────────────────────────────────────────────────────────*/
+  ═══════════════════════════════════════════════════════ */
   return (
-    <div
-      style={{ fontFamily: "Arial, Helvetica, sans-serif", overflowX: "hidden" }}
-    >
-      {/* ══════════ HERO SECTION ══════════ */}
+    <div style={{ fontFamily: "Arial, Helvetica, sans-serif", overflowX: "hidden" }}>
+
+      {/* ══════════ HERO ══════════ */}
       <section
-        ref={containerRef}
         style={{
           position:  "relative",
           minHeight: "100dvh",
           width:     "100%",
           overflow:  "hidden",
-          background: "#000",
+          background: "#0a0a0a",
         }}
       >
-        {/* ── Full-screen background ── */}
-        <motion.div
+        {/* ── Full-screen background ───────────────────── */}
+        <div
           style={{
-            position:   "absolute",
-            inset:      0,
-            zIndex:     0,
-            opacity:    bgOpacity,
-            scale:      bgScale,
-            transition: "none",
+            position:  "absolute",
+            inset:     0,
+            zIndex:    0,
+            opacity:   bgOpacity,
+            transform: `scale(${bgScale})`,
+            transition:"transform 0.1s linear",
           }}
-          transition={{ duration: 0.1, ease: "linear" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -233,11 +259,22 @@ export default function CinematicHero() {
               display:        "block",
             }}
           />
-          {/* Black tint overlay 20% */}
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.20)" }} />
-        </motion.div>
+          {/* Dark tint */}
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+        </div>
 
-        {/* ── Top-right media switch ── */}
+        {/* ── Subtle radial vignette always present ─────── */}
+        <div
+          style={{
+            position:   "absolute",
+            inset:      0,
+            zIndex:     1,
+            background: "radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.72) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* ── Top-right media switch ───────────────────── */}
         <div
           style={{
             position:       "fixed",
@@ -245,14 +282,12 @@ export default function CinematicHero() {
             right:          16,
             zIndex:         100,
             display:        "flex",
-            flexDirection:  "row",
-            alignItems:     "center",
             padding:        "6px",
             borderRadius:   "12px",
-            border:         "1px solid rgba(255,255,255,0.2)",
-            background:     "rgba(0,0,0,0.25)",
-            backdropFilter: "blur(16px)",
-            boxShadow:      "0 8px 32px rgba(0,0,0,0.4)",
+            border:         "1px solid rgba(255,255,255,0.18)",
+            background:     "rgba(0,0,0,0.35)",
+            backdropFilter: "blur(20px)",
+            boxShadow:      "0 8px 32px rgba(0,0,0,0.5)",
           }}
         >
           {(["video", "image"] as MediaMode[]).map((m) => {
@@ -270,8 +305,8 @@ export default function CinematicHero() {
                   cursor:       "pointer",
                   transition:   "all 300ms",
                   background:   active ? "#fff" : "transparent",
-                  color:        active ? "#000" : "rgba(255,255,255,0.7)",
-                  boxShadow:    active ? "0 2px 8px rgba(0,0,0,0.2)" : "none",
+                  color:        active ? "#000" : "rgba(255,255,255,0.65)",
+                  boxShadow:    active ? "0 2px 10px rgba(0,0,0,0.25)" : "none",
                   fontFamily:   "inherit",
                 }}
               >
@@ -281,7 +316,7 @@ export default function CinematicHero() {
           })}
         </div>
 
-        {/* ── Title (above media, pointer-events none) ── */}
+        {/* ── Title (mix-blend-mode: difference floats over media) ── */}
         <div
           style={{
             position:       "absolute",
@@ -297,23 +332,7 @@ export default function CinematicHero() {
             mixBlendMode:   "difference",
           }}
         >
-          <motion.span
-            style={{
-              display:       "block",
-              fontSize:      "clamp(2.5rem, 6vw, 6rem)",
-              fontWeight:    700,
-              lineHeight:    0.9,
-              letterSpacing: "-0.06em",
-              textAlign:     "center",
-              color:         "#dbeafe",  /* blue-100 */
-              x:             `-${titleX}vw`,
-              willChange:    "transform",
-            }}
-            transition={{ duration: 0.1, ease: "linear" }}
-          >
-            {line1}
-          </motion.span>
-          <motion.span
+          <span
             style={{
               display:       "block",
               fontSize:      "clamp(2.5rem, 6vw, 6rem)",
@@ -322,16 +341,67 @@ export default function CinematicHero() {
               letterSpacing: "-0.06em",
               textAlign:     "center",
               color:         "#dbeafe",
-              x:             `${titleX}vw`,
+              transform:     `translateX(-${titleX}vw)`,
               willChange:    "transform",
+              transition:    "transform 0.08s linear",
             }}
-            transition={{ duration: 0.1, ease: "linear" }}
+          >
+            {line1}
+          </span>
+          <span
+            style={{
+              display:       "block",
+              fontSize:      "clamp(2.5rem, 6vw, 6rem)",
+              fontWeight:    700,
+              lineHeight:    0.9,
+              letterSpacing: "-0.06em",
+              textAlign:     "center",
+              color:         "#dbeafe",
+              transform:     `translateX(${titleX}vw)`,
+              willChange:    "transform",
+              transition:    "transform 0.08s linear",
+            }}
           >
             {line2}
-          </motion.span>
+          </span>
         </div>
 
-        {/* ── Central media card ── */}
+        {/* ── Aperture decorative outer ring (fades as it expands) ── */}
+        <div
+          style={{
+            position:     "absolute",
+            top:          "50%",
+            left:         "50%",
+            transform:    `translate(-50%, -50%) scale(${ringSize})`,
+            width:        `${mediaW + 32}px`,
+            height:       `${mediaH + 32}px`,
+            borderRadius: `${borderR + 18}px`,
+            border:       `1px solid rgba(255, 185, 30, ${ringOpacity * 0.5})`,
+            boxShadow:    `0 0 40px rgba(255,185,30,${ringOpacity * 0.25}), inset 0 0 40px rgba(255,185,30,${ringOpacity * 0.12})`,
+            zIndex:       9,
+            pointerEvents:"none",
+            transition:   "all 0.1s linear",
+          }}
+        />
+
+        {/* ── Second aperture tick ring ─────────────────── */}
+        <div
+          style={{
+            position:     "absolute",
+            top:          "50%",
+            left:         "50%",
+            transform:    `translate(-50%, -50%) scale(${ringSize * 1.07})`,
+            width:        `${mediaW + 32}px`,
+            height:       `${mediaH + 32}px`,
+            borderRadius: `${borderR + 18}px`,
+            border:       `1px solid rgba(255, 185, 30, ${ringOpacity * 0.2})`,
+            zIndex:       8,
+            pointerEvents:"none",
+            transition:   "all 0.1s linear",
+          }}
+        />
+
+        {/* ── Central media card (the LENS IRIS) ───────── */}
         <div
           style={{
             position:     "absolute",
@@ -342,59 +412,103 @@ export default function CinematicHero() {
             height:       `${mediaH}px`,
             borderRadius: `${borderR}px`,
             overflow:     "hidden",
-            boxShadow:    "0 30px 100px rgba(0,0,0,0.42)",
+            boxShadow:    shadow,
             zIndex:       10,
+            transition:   "border-radius 0.08s linear, width 0.08s linear, height 0.08s linear",
           }}
         >
-          {/* Media */}
-          {mode === "video" ? (
-            <video
-              key={VIDEO_URL}
-              src={VIDEO_URL}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              style={{
-                width:          "100%",
-                height:         "100%",
-                objectFit:      "cover",
-                display:        "block",
-                pointerEvents:  "none",
-                background:     "transparent",
-              }}
-              disablePictureInPicture
-            />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={IMAGE_SRC}
-              src={IMAGE_SRC}
-              alt=""
-              style={{
-                width:         "100%",
-                height:        "100%",
-                objectFit:     "cover",
-                display:       "block",
-                pointerEvents: "none",
-              }}
-            />
-          )}
-
-          {/* Video/image overlay */}
+          {/* Inner wrapper that SCALES (zoom-through-lens) */}
           <div
             style={{
-              position:   "absolute",
-              inset:      0,
-              background: `rgba(0,0,0,${videoOverlayOpacity})`,
-              transition: "background 0.1s linear",
+              width:     "100%",
+              height:    "100%",
+              transform: `scale(${innerScale})`,
+              transition:"transform 0.08s linear",
+            }}
+          >
+            {mode === "video" ? (
+              <video
+                key={VIDEO_URL}
+                src={VIDEO_URL}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                style={{
+                  width:         "100%",
+                  height:        "100%",
+                  objectFit:     "cover",
+                  display:       "block",
+                  pointerEvents: "none",
+                }}
+                disablePictureInPicture
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={IMAGE_SRC}
+                src={IMAGE_SRC}
+                alt="Camera lens aperture"
+                style={{
+                  width:         "100%",
+                  height:        "100%",
+                  objectFit:     "cover",
+                  display:       "block",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+          </div>
+
+          {/* Media overlay */}
+          <div
+            style={{
+              position:      "absolute",
+              inset:         0,
+              background:    `rgba(0,0,0,${mediaOverlay})`,
+              transition:    "background 0.1s linear",
               pointerEvents: "none",
+            }}
+          />
+
+          {/* Lens reflection sheen (only visible at low progress) */}
+          <div
+            style={{
+              position:      "absolute",
+              inset:         0,
+              background:    `radial-gradient(ellipse at 35% 35%, rgba(255,220,100,${lerp(0.10, 0, progress * 3)}) 0%, transparent 60%)`,
+              pointerEvents: "none",
+              mixBlendMode:  "screen",
             }}
           />
         </div>
 
-        {/* ── Scroll indicator ── */}
+        {/* ── "LENS" label under card at rest (fades fast) ── */}
+        <div
+          style={{
+            position:     "absolute",
+            top:          "50%",
+            left:         "50%",
+            transform:    `translate(-50%, calc(-50% + ${mediaH / 2 + 14}px))`,
+            zIndex:       30,
+            opacity:      Math.max(0, lerp(0.55, 0, progress * 5)),
+            pointerEvents:"none",
+            transition:   "opacity 0.1s linear",
+          }}
+        >
+          <span style={{
+            fontSize:      "10px",
+            fontWeight:    600,
+            letterSpacing: "0.35em",
+            textTransform: "uppercase",
+            color:         "rgba(255,185,30,0.8)",
+          }}>
+            ƒ / 1.8 · ISO 100 · 1/1000s
+          </span>
+        </div>
+
+        {/* ── Scroll indicator ──────────────────────────── */}
         <AnimatePresence>
           {showIndicator && (
             <motion.div
@@ -410,53 +524,34 @@ export default function CinematicHero() {
                 pointerEvents: "none",
               }}
             >
-              <div
-                style={{
-                  display:        "flex",
-                  flexDirection:  "column",
-                  alignItems:     "center",
-                  justifyContent: "center",
-                  gap:            "12px",
-                  color:          "#fff",
-                }}
-              >
-                {/* SCROLL label */}
-                <span
-                  style={{
-                    fontSize:      "11px",
-                    fontWeight:    600,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.32em",
-                    textAlign:     "center",
-                    color:         "#fff",
-                  }}
-                >
+              <div style={{
+                display:        "flex",
+                flexDirection:  "column",
+                alignItems:     "center",
+                gap:            "12px",
+                color:          "#fff",
+              }}>
+                <span style={{
+                  fontSize:      "11px",
+                  fontWeight:    600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.32em",
+                  color:         "rgba(255,185,30,0.9)",
+                }}>
                   SCROLL
                 </span>
-
-                {/* Mouse outline */}
-                <div
-                  style={{
-                    width:          "28px",
-                    height:         "44px",
-                    border:         "1px solid rgba(255,255,255,0.5)",
-                    borderRadius:   "999px",
-                    padding:        "6px",
-                    display:        "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* Animated dot */}
+                <div style={{
+                  width:          "28px",
+                  height:         "44px",
+                  border:         "1px solid rgba(255,255,255,0.5)",
+                  borderRadius:   "999px",
+                  padding:        "6px",
+                  display:        "flex",
+                  justifyContent: "center",
+                }}>
                   <motion.div
-                    animate={{
-                      y:       [0, 20, 0],
-                      opacity: [0.35, 1, 0.35],
-                    }}
-                    transition={{
-                      duration: 1.8,
-                      repeat:   Infinity,
-                      ease:     "easeInOut",
-                    }}
+                    animate={{ y: [0, 20, 0], opacity: [0.35, 1, 0.35] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                     style={{
                       width:        "6px",
                       height:       "6px",
@@ -471,81 +566,61 @@ export default function CinematicHero() {
         </AnimatePresence>
       </section>
 
-      {/* ══════════ CONTENT SECTION ══════════ */}
+      {/* ══════════ REVEALED CONTENT ══════════ */}
       <motion.section
         animate={expanded
-          ? { opacity: 1, y: 0, pointerEvents: "auto" as const }
-          : { opacity: 0, y: 40, pointerEvents: "none" as const }
-        }
+          ? { opacity: 1, y: 0, pointerEvents: "auto"  as const }
+          : { opacity: 0, y: 40, pointerEvents: "none" as const }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          background:    "#fff",
-          width:         "100%",
-        }}
+        style={{ background: "#fff", width: "100%" }}
       >
-        <div
-          style={{
-            maxWidth:  "896px",
-            margin:    "0 auto",
-            padding:   isMobile ? "48px 32px" : "96px 64px",
-          }}
-        >
+        <div style={{
+          maxWidth: "896px",
+          margin:   "0 auto",
+          padding:  isMobile ? "48px 32px" : "96px 64px",
+        }}>
           {/* Label */}
-          <p
-            style={{
-              fontSize:      "12px",
-              fontWeight:    600,
-              textTransform: "uppercase",
-              letterSpacing: "0.3em",
-              color:         "rgba(0,0,0,0.45)",
-              marginBottom:  "16px",
-            }}
-          >
+          <p style={{
+            fontSize:      "12px",
+            fontWeight:    600,
+            textTransform: "uppercase",
+            letterSpacing: "0.3em",
+            color:         "rgba(0,0,0,0.45)",
+            marginBottom:  "16px",
+          }}>
             ABOUT THE EXPERIENCE
           </p>
 
           {/* Heading */}
-          <h2
-            style={{
-              fontSize:      isMobile ? "36px" : "60px",
-              fontWeight:    600,
-              letterSpacing: "-0.05em",
-              color:         "#000",
-              marginBottom:  "32px",
-              maxWidth:      "768px",
-              lineHeight:    1.1,
-            }}
-          >
+          <h2 style={{
+            fontSize:      isMobile ? "36px" : "60px",
+            fontWeight:    600,
+            letterSpacing: "-0.05em",
+            color:         "#000",
+            marginBottom:  "32px",
+            maxWidth:      "768px",
+            lineHeight:    1.1,
+          }}>
             A visual story that unfolds through movement.
           </h2>
 
           {/* Two-column text */}
-          <div
-            style={{
-              display:             isMobile ? "block" : "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap:                 "32px",
-            }}
-          >
-            <p
-              style={{
-                fontSize:     "18px",
-                lineHeight:   "32px",
-                color:        "rgba(0,0,0,0.70)",
-                marginBottom: isMobile ? "24px" : 0,
-              }}
-            >
+          <div style={{
+            display:             isMobile ? "block" : "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap:                 "32px",
+          }}>
+            <p style={{
+              fontSize:     "18px",
+              lineHeight:   "32px",
+              color:        "rgba(0,0,0,0.70)",
+              marginBottom: isMobile ? "24px" : 0,
+            }}>
               {mode === "video"
                 ? "This interactive hero transforms a focused visual moment into a full-screen cinematic experience. Scrolling expands the media while the surrounding typography separates, allowing the visual to take over the page."
                 : "The same cinematic expansion works with still imagery, transforming a compact editorial frame into an immersive visual environment controlled directly by the viewer."}
             </p>
-            <p
-              style={{
-                fontSize:   "18px",
-                lineHeight: "32px",
-                color:      "rgba(0,0,0,0.70)",
-              }}
-            >
+            <p style={{ fontSize: "18px", lineHeight: "32px", color: "rgba(0,0,0,0.70)" }}>
               {mode === "video"
                 ? "Use this interaction for campaign films, product launches, editorial stories, portfolios, immersive case studies or premium landing-page introductions."
                 : "This version is ideal for photography portfolios, destinations, architecture projects, visual essays and high-end creative campaigns."}
@@ -553,47 +628,31 @@ export default function CinematicHero() {
           </div>
 
           {/* Divider */}
-          <div
-            style={{
-              marginTop:  "80px",
-              height:     "1px",
-              background: "rgba(0,0,0,0.10)",
-            }}
-          />
+          <div style={{ marginTop: "80px", height: "1px", background: "rgba(0,0,0,0.10)" }} />
 
-          {/* Metadata three columns */}
-          <div
-            style={{
-              display:             isMobile ? "block" : "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap:                 "40px",
-              padding:             "64px 0",
-            }}
-          >
+          {/* Metadata */}
+          <div style={{
+            display:             isMobile ? "block" : "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap:                 "40px",
+            padding:             "64px 0",
+          }}>
             {[
               { label: "INTERACTION", value: "Scroll controlled" },
               { label: "EXPERIENCE",  value: "Fully responsive" },
               { label: "MEDIA",       value: mode === "video" ? "Video" : "Image" },
             ].map(({ label, value }) => (
               <div key={label} style={{ marginBottom: isMobile ? "40px" : 0 }}>
-                <p
-                  style={{
-                    fontSize:      "12px",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.22em",
-                    color:         "rgba(0,0,0,0.40)",
-                    marginBottom:  "12px",
-                  }}
-                >
+                <p style={{
+                  fontSize:      "12px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.22em",
+                  color:         "rgba(0,0,0,0.40)",
+                  marginBottom:  "12px",
+                }}>
                   {label}
                 </p>
-                <p
-                  style={{
-                    fontSize:   "18px",
-                    fontWeight: 500,
-                    color:      "#000",
-                  }}
-                >
+                <p style={{ fontSize: "18px", fontWeight: 500, color: "#000" }}>
                   {value}
                 </p>
               </div>
