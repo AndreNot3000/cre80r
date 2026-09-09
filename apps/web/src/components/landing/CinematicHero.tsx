@@ -4,27 +4,15 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ─────────────────────────────────────────────────────────────
-   TYPES
-───────────────────────────────────────────────────────────── */
-type MediaMode = "video" | "image";
-
-/* ─────────────────────────────────────────────────────────────
-   CONSTANTS  ← camera / photography themed
+   CONSTANTS  ← Camera Lens Experience
 ───────────────────────────────────────────────────────────── */
 
-// Video mode
-const VIDEO_URL = "https://www.pexels.com/download/video/17828727/";
-
-// Dark moody bokeh studio atmosphere
-const VIDEO_BG =
-  "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=2400&q=90";
-
-// Image mode — front element of a camera lens (aperture view)
-const IMAGE_SRC =
+// Front element of a camera lens (aperture view) inside the central card
+const LENS_IMAGE_SRC =
   "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1800&q=90";
 
-// Photographer in action wide scene
-const IMAGE_BG =
+// Cinematic photographer background with moody studio atmosphere
+const HERO_BG_IMAGE =
   "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=2400&q=90";
 
 const BREAKPOINT = 768;
@@ -36,7 +24,6 @@ function clamp(val: number, min: number, max: number) {
   return Math.min(Math.max(val, min), max);
 }
 
-// Interpolate between two numbers
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
@@ -46,7 +33,6 @@ function lerp(a: number, b: number, t: number) {
 ───────────────────────────────────────────────────────────── */
 export default function CinematicHero() {
   const [progress, setProgress] = useState(0);
-  const [mode, setMode]         = useState<MediaMode>("video");
   const [isMobile, setIsMobile] = useState(false);
 
   const progressRef = useRef(0);
@@ -140,18 +126,6 @@ export default function CinematicHero() {
     };
   }, [applyProgress]);
 
-  /* ── switch mode ────────────────────────────────────── */
-  const switchMode = (m: MediaMode) => {
-    if (m === mode) return;
-    window.scrollTo(0, 0);
-    document.body.style.overflow          = "hidden";
-    document.body.style.overscrollBehavior = "none";
-    expandedRef.current = false;
-    progressRef.current = 0;
-    setProgress(0);
-    setMode(m);
-  };
-
   /* ═══════════════════════════════════════════════════════
      DERIVED VISUAL VALUES
   ═══════════════════════════════════════════════════════ */
@@ -171,21 +145,18 @@ export default function CinematicHero() {
   const mediaW = Math.min(rawW, maxW);
   const mediaH = Math.min(rawH, maxH);
 
-  // ── LENS IRIS: starts as a tight pill/circle, opens into widescreen rect ──
-  // At progress=0 → 150px radius (looks like a lens aperture on portrait card)
-  // At progress=1 → 8px radius (cinematic landscape frame)
+  // ── LENS IRIS: starts as a tight circular aperture, opens into widescreen rect ──
   const borderR = Math.max(8, lerp(150, 8, progress));
 
   // ── Inner media ZOOM: starts zoomed in, pulls back as lens "opens" ──
-  // Feels like the camera is focusing / zooming through the lens
   const innerScale = lerp(1.45, 1.0, progress);
 
   // ── Lens glow shadow: amber/gold at rest, deep cinematic at full ──
-  const glowR   = Math.round(lerp(255, 0,   progress));
-  const glowG   = Math.round(lerp(185, 0,   progress));
-  const glowB   = Math.round(lerp(30,  0,   progress));
+  const glowR     = Math.round(lerp(255, 0, progress));
+  const glowG     = Math.round(lerp(185, 0, progress));
+  const glowB     = Math.round(lerp(30,  0, progress));
   const glowAlpha = lerp(0.65, 0, progress);
-  const glowBlur  = lerp(80, 0,  progress);
+  const glowBlur  = lerp(80, 0, progress);
   const lensGlow  = `0 0 ${glowBlur}px rgba(${glowR},${glowG},${glowB},${glowAlpha})`;
   const baseShadow = `0 30px 100px rgba(0,0,0,${lerp(0.3, 0.55, progress)})`;
   const shadow     = `${lensGlow}, ${baseShadow}`;
@@ -199,9 +170,7 @@ export default function CinematicHero() {
   const bgScale   = 1 + progress * 0.05;
 
   // ── Overlay on media ─────────────────────────────────
-  const mediaOverlay = mode === "video"
-    ? lerp(0.52, 0.18, progress)
-    : lerp(0.55, 0.20, progress);
+  const mediaOverlay = lerp(0.55, 0.20, progress);
 
   // ── Title split movement ──────────────────────────────
   const titleMove = isMobile ? 180 : 150;
@@ -212,9 +181,9 @@ export default function CinematicHero() {
   const indicatorTop  = vh / 2 + displayedH / 2 + 34;
   const showIndicator = progress < 0.16;
 
-  // ── Title copy (camera-themed) ────────────────────────
-  const line1 = mode === "video" ? "Frame"   : "Capture";
-  const line2 = mode === "video" ? "the Moment" : "Everything";
+  // ── Title copy (camera/creative themed) ───────────────
+  const line1 = "Frame";
+  const line2 = "the Moment";
 
   /* ═══════════════════════════════════════════════════════
      RENDER
@@ -245,7 +214,7 @@ export default function CinematicHero() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={mode === "video" ? VIDEO_BG : IMAGE_BG}
+            src={HERO_BG_IMAGE}
             alt=""
             style={{
               width:          "100%",
@@ -269,48 +238,6 @@ export default function CinematicHero() {
             pointerEvents: "none",
           }}
         />
-
-        {/* ── Top-right media switch ───────────────────── */}
-        <div
-          style={{
-            position:       "fixed",
-            top:            16,
-            right:          16,
-            zIndex:         100,
-            display:        "flex",
-            padding:        "6px",
-            borderRadius:   "12px",
-            border:         "1px solid rgba(255,255,255,0.18)",
-            background:     "rgba(0,0,0,0.35)",
-            backdropFilter: "blur(20px)",
-            boxShadow:      "0 8px 32px rgba(0,0,0,0.5)",
-          }}
-        >
-          {(["video", "image"] as MediaMode[]).map((m) => {
-            const active = mode === m;
-            return (
-              <button
-                key={m}
-                onClick={() => switchMode(m)}
-                style={{
-                  padding:      "10px 20px",
-                  borderRadius: "8px",
-                  fontSize:     "14px",
-                  fontWeight:   500,
-                  border:       "none",
-                  cursor:       "pointer",
-                  transition:   "all 300ms",
-                  background:   active ? "#fff" : "transparent",
-                  color:        active ? "#000" : "rgba(255,255,255,0.65)",
-                  boxShadow:    active ? "0 2px 10px rgba(0,0,0,0.25)" : "none",
-                  fontFamily:   "inherit",
-                }}
-              >
-                {m === "video" ? "Video" : "Image"}
-              </button>
-            );
-          })}
-        </div>
 
         {/* ── Title (mix-blend-mode: difference floats over media) ── */}
         <div
@@ -422,39 +349,19 @@ export default function CinematicHero() {
               transition:"transform 0.08s linear",
             }}
           >
-            {mode === "video" ? (
-              <video
-                key={VIDEO_URL}
-                src={VIDEO_URL}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                style={{
-                  width:         "100%",
-                  height:        "100%",
-                  objectFit:     "cover",
-                  display:       "block",
-                  pointerEvents: "none",
-                }}
-                disablePictureInPicture
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={IMAGE_SRC}
-                src={IMAGE_SRC}
-                alt="Camera lens aperture"
-                style={{
-                  width:         "100%",
-                  height:        "100%",
-                  objectFit:     "cover",
-                  display:       "block",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={LENS_IMAGE_SRC}
+              src={LENS_IMAGE_SRC}
+              alt="Camera lens aperture"
+              style={{
+                width:         "100%",
+                height:        "100%",
+                objectFit:     "cover",
+                display:       "block",
+                pointerEvents: "none",
+              }}
+            />
           </div>
 
           {/* Media overlay */}
@@ -561,7 +468,6 @@ export default function CinematicHero() {
           )}
         </AnimatePresence>
       </section>
-
     </div>
   );
 }
