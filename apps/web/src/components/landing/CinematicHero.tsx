@@ -181,9 +181,9 @@ export default function CinematicHero() {
   const indicatorTop  = vh / 2 + displayedH / 2 + 34;
   const showIndicator = progress < 0.16;
 
-  // ── Title copy (camera/creative themed) ───────────────
-  const line1 = "Frame";
-  const line2 = "the Moment";
+  // ── Title copy (Option 3: Brand Identity) ────────────
+  const line1 = "Crea8or";
+  const line2 = "Creative OS";
 
   /* ═══════════════════════════════════════════════════════
      RENDER
