@@ -47,7 +47,6 @@ function lerp(a: number, b: number, t: number) {
 export default function CinematicHero() {
   const [progress, setProgress] = useState(0);
   const [mode, setMode]         = useState<MediaMode>("video");
-  const [expanded, setExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const progressRef = useRef(0);
@@ -70,12 +69,10 @@ export default function CinematicHero() {
 
     if (clamped >= 1 && !expandedRef.current) {
       expandedRef.current = true;
-      setExpanded(true);
       document.body.style.overflow          = "";
       document.body.style.overscrollBehavior = "";
     } else if (clamped < 1 && expandedRef.current) {
       expandedRef.current = false;
-      setExpanded(false);
       document.body.style.overflow          = "hidden";
       document.body.style.overscrollBehavior = "none";
     }
@@ -150,7 +147,6 @@ export default function CinematicHero() {
     document.body.style.overflow          = "hidden";
     document.body.style.overscrollBehavior = "none";
     expandedRef.current = false;
-    setExpanded(false);
     progressRef.current = 0;
     setProgress(0);
     setMode(m);
@@ -566,100 +562,6 @@ export default function CinematicHero() {
         </AnimatePresence>
       </section>
 
-      {/* ══════════ REVEALED CONTENT ══════════ */}
-      <motion.section
-        animate={expanded
-          ? { opacity: 1, y: 0, pointerEvents: "auto"  as const }
-          : { opacity: 0, y: 40, pointerEvents: "none" as const }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        style={{ background: "#fff", width: "100%" }}
-      >
-        <div style={{
-          maxWidth: "896px",
-          margin:   "0 auto",
-          padding:  isMobile ? "48px 32px" : "96px 64px",
-        }}>
-          {/* Label */}
-          <p style={{
-            fontSize:      "12px",
-            fontWeight:    600,
-            textTransform: "uppercase",
-            letterSpacing: "0.3em",
-            color:         "rgba(0,0,0,0.45)",
-            marginBottom:  "16px",
-          }}>
-            ABOUT THE EXPERIENCE
-          </p>
-
-          {/* Heading */}
-          <h2 style={{
-            fontSize:      isMobile ? "36px" : "60px",
-            fontWeight:    600,
-            letterSpacing: "-0.05em",
-            color:         "#000",
-            marginBottom:  "32px",
-            maxWidth:      "768px",
-            lineHeight:    1.1,
-          }}>
-            A visual story that unfolds through movement.
-          </h2>
-
-          {/* Two-column text */}
-          <div style={{
-            display:             isMobile ? "block" : "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap:                 "32px",
-          }}>
-            <p style={{
-              fontSize:     "18px",
-              lineHeight:   "32px",
-              color:        "rgba(0,0,0,0.70)",
-              marginBottom: isMobile ? "24px" : 0,
-            }}>
-              {mode === "video"
-                ? "This interactive hero transforms a focused visual moment into a full-screen cinematic experience. Scrolling expands the media while the surrounding typography separates, allowing the visual to take over the page."
-                : "The same cinematic expansion works with still imagery, transforming a compact editorial frame into an immersive visual environment controlled directly by the viewer."}
-            </p>
-            <p style={{ fontSize: "18px", lineHeight: "32px", color: "rgba(0,0,0,0.70)" }}>
-              {mode === "video"
-                ? "Use this interaction for campaign films, product launches, editorial stories, portfolios, immersive case studies or premium landing-page introductions."
-                : "This version is ideal for photography portfolios, destinations, architecture projects, visual essays and high-end creative campaigns."}
-            </p>
-          </div>
-
-          {/* Divider */}
-          <div style={{ marginTop: "80px", height: "1px", background: "rgba(0,0,0,0.10)" }} />
-
-          {/* Metadata */}
-          <div style={{
-            display:             isMobile ? "block" : "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap:                 "40px",
-            padding:             "64px 0",
-          }}>
-            {[
-              { label: "INTERACTION", value: "Scroll controlled" },
-              { label: "EXPERIENCE",  value: "Fully responsive" },
-              { label: "MEDIA",       value: mode === "video" ? "Video" : "Image" },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ marginBottom: isMobile ? "40px" : 0 }}>
-                <p style={{
-                  fontSize:      "12px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.22em",
-                  color:         "rgba(0,0,0,0.40)",
-                  marginBottom:  "12px",
-                }}>
-                  {label}
-                </p>
-                <p style={{ fontSize: "18px", fontWeight: 500, color: "#000" }}>
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
     </div>
   );
 }
