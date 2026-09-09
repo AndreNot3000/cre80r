@@ -1,5 +1,4 @@
-import { Navbar } from "@/components/landing/Navbar";
-import { Hero } from "@/components/landing/Hero";
+import CinematicHero from "@/components/landing/CinematicHero";
 import { TrustSection } from "@/components/landing/TrustSection";
 import { ProblemSection } from "@/components/landing/ProblemSection";
 import { Features } from "@/components/landing/Features";
@@ -19,48 +18,48 @@ import { Footer } from "@/components/landing/Footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#07080d] text-white selection:bg-violet-500 selection:text-white relative overflow-x-hidden font-sans antialiased">
-      {/* Top Navbar */}
-      <Navbar />
+    <div className="relative overflow-x-hidden font-sans antialiased" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+      {/* Cinematic hero — full screen, no navbar, no boxed container */}
+      <CinematicHero />
 
-      {/* Hero Section with Live Mockup */}
-      <Hero />
+      {/* Rest of landing page below the hero experience */}
+      <div className="bg-[#07080d] text-white selection:bg-violet-500 selection:text-white">
+        {/* Social Proof & Metrics */}
+        <TrustSection />
 
-      {/* Social Proof & Metrics */}
-      <TrustSection />
+        {/* The 7-Tool Chaos vs Unified OS */}
+        <ProblemSection />
 
-      {/* The 7-Tool Chaos vs Unified OS */}
-      <ProblemSection />
+        {/* Core OS Capabilities Bento Grid */}
+        <Features />
 
-      {/* Core OS Capabilities Bento Grid */}
-      <Features />
+        {/* Deep-Dive Domain Showcases */}
+        <CRMShowcase />
+        <BookingShowcase />
+        <ProjectShowcase />
+        <GalleryShowcase />
+        <VideoReviewShowcase />
+        <FinanceShowcase />
 
-      {/* Deep-Dive Domain Showcases */}
-      <CRMShowcase />
-      <BookingShowcase />
-      <ProjectShowcase />
-      <GalleryShowcase />
-      <VideoReviewShowcase />
-      <FinanceShowcase />
+        {/* AI Assistant & Automation Engine */}
+        <AIShowcase />
+        <AutomationShowcase />
 
-      {/* AI Assistant & Automation Engine */}
-      <AIShowcase />
-      <AutomationShowcase />
+        {/* Workflow Customization by Creator Type */}
+        <CreatorTypes />
 
-      {/* Workflow Customization by Creator Type */}
-      <CreatorTypes />
+        {/* Pricing Tiers & Billing */}
+        <Pricing />
 
-      {/* Pricing Tiers & Billing */}
-      <Pricing />
+        {/* Interactive FAQ */}
+        <FAQ />
 
-      {/* Interactive FAQ */}
-      <FAQ />
+        {/* High-Impact Final CTA */}
+        <FinalCTA />
 
-      {/* High-Impact Final CTA */}
-      <FinalCTA />
-
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </div>
     </div>
   );
 }
