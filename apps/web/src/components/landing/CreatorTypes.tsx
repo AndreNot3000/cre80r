@@ -101,7 +101,7 @@ export function CreatorTypes() {
         {(() => {
           const current = creators[activeType] || creators[0]!;
           return (
-            <div className="max-w-4xl mx-auto rounded-3xl border border-violet-500/30 bg-[#0e101c] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.6)] space-y-6">
+            <div className="max-w-4xl mx-auto rounded-3xl border border-violet-500/30 bg-white/[0.03] backdrop-blur-2xl p-8 shadow-[0_8px_32px_0_rgba(124,58,237,0.15),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/[0.06]">
                 <div>
                   <span className="text-xs font-mono text-cyan-400 font-semibold uppercase tracking-wider">

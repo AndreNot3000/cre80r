@@ -49,7 +49,7 @@ export function FAQ() {
             return (
               <div
                 key={i}
-                className="rounded-2xl border border-white/[0.08] bg-[#0e101b] overflow-hidden transition-colors"
+                className="rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden transition-all hover:border-white/[0.2] hover:bg-white/[0.05]"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : i)}

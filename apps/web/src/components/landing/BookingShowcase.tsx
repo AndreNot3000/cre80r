@@ -7,7 +7,7 @@ export function BookingShowcase() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Visual Mockup */}
           <div className="lg:col-span-7 order-2 lg:order-1">
-            <div className="rounded-2xl border border-cyan-500/20 bg-[#0b0d17] p-5 sm:p-6 shadow-[0_20px_50px_rgba(6,182,212,0.1)] space-y-4">
+            <div className="rounded-3xl border border-cyan-500/30 bg-white/[0.03] backdrop-blur-2xl p-5 sm:p-6 shadow-[0_8px_32px_0_rgba(6,182,212,0.12),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
                 <div className="text-xs font-bold text-white flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-cyan-400" />

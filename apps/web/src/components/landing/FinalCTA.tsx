@@ -8,7 +8,7 @@ export function FinalCTA() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[800px] h-[350px] bg-gradient-to-r from-violet-600/30 via-indigo-600/20 to-cyan-500/20 blur-[120px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-violet-500/30 bg-gradient-to-b from-[#121426] via-[#0d0f1c] to-[#090a12] p-8 sm:p-14 text-center shadow-[0_0_80px_rgba(124,58,237,0.25)] space-y-8 relative overflow-hidden">
+        <div className="rounded-3xl border border-violet-500/40 bg-gradient-to-b from-violet-950/30 via-white/[0.04] to-cyan-950/20 backdrop-blur-2xl p-8 sm:p-14 text-center shadow-[0_8px_40px_rgba(124,58,237,0.25),inset_0_1px_1px_rgba(255,255,255,0.15)] space-y-8 relative overflow-hidden">
           {/* Subtle Grid overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
 

@@ -36,7 +36,7 @@ export function ProblemSection() {
         {/* Side-by-Side Comparison */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Old Way */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-[#12131c]/60 border border-rose-500/20 backdrop-blur-xl space-y-6">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] backdrop-blur-2xl border border-rose-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.1)] space-y-6">
             <div className="flex items-center gap-2 text-rose-400 font-semibold text-sm">
               <span className="p-1 rounded-md bg-rose-500/10">
                 <XCircle className="w-5 h-5" />
@@ -46,7 +46,7 @@ export function ProblemSection() {
 
             <div className="space-y-4">
               {fragmentedTools.map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-black/30 border border-white/[0.04] space-y-1">
+                <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm space-y-1">
                   <div className="text-xs font-bold text-slate-200">{item.tool}</div>
                   <div className="text-xs text-rose-300/80 leading-relaxed">{item.issue}</div>
                 </div>
@@ -60,7 +60,7 @@ export function ProblemSection() {
           </div>
 
           {/* New Way — Crea8or OS */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-violet-950/40 via-[#0e101b] to-[#0c0d15] border border-violet-500/30 backdrop-blur-xl shadow-[0_0_50px_rgba(124,58,237,0.15)] space-y-6 relative overflow-hidden">
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-violet-950/30 via-white/[0.04] to-cyan-950/20 border border-violet-500/40 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(124,58,237,0.2),inset_0_1px_1px_rgba(255,255,255,0.15)] space-y-6 relative overflow-hidden">
             {/* Top Glow Accent */}
             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-cyan-500/20 to-transparent blur-3xl pointer-events-none" />
 

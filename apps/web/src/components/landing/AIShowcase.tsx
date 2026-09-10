@@ -49,7 +49,7 @@ export function AIShowcase() {
         {/* Interactive Tabs */}
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Tab Selector */}
-          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-[#0f111d] border border-white/[0.08]">
+          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
             <button
               onClick={() => setActiveTab("quote")}
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
@@ -93,12 +93,12 @@ export function AIShowcase() {
           </div>
 
           {/* AI Terminal Output Card */}
-          <div className="rounded-3xl border border-violet-500/30 bg-[#0d0e19] p-6 sm:p-8 shadow-[0_20px_60px_rgba(139,92,246,0.15)] space-y-6">
+          <div className="rounded-3xl border border-violet-500/30 bg-white/[0.03] backdrop-blur-2xl p-6 sm:p-8 shadow-[0_8px_32px_0_rgba(139,92,246,0.15),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-6">
             <div className="space-y-2">
               <div className="text-[11px] font-mono uppercase tracking-wider text-violet-400 font-semibold">
                 Creator Prompt
               </div>
-              <div className="p-4 rounded-xl bg-black/50 border border-white/[0.06] text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
+              <div className="p-4 rounded-xl bg-white/[0.02] backdrop-blur-md border border-white/[0.08] text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
                 &ldquo;{aiFeatures[activeTab].prompt}&rdquo;
               </div>
             </div>
