@@ -33,7 +33,7 @@ export function AutomationShowcase() {
   ];
 
   return (
-    <section className="py-20 border-t border-white/[0.06] relative bg-[#0a0b12]">
+    <section className="py-20 border-t border-white/[0.06] relative bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">

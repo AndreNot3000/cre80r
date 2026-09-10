@@ -2,7 +2,7 @@ import { CreditCard, DollarSign, ShieldCheck, CheckCircle2, ArrowRight, FileText
 
 export function FinanceShowcase() {
   return (
-    <section className="py-20 border-t border-white/[0.06] relative bg-[#090b14]/50">
+    <section className="py-20 border-t border-white/[0.06] relative bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Visual Mockup */}

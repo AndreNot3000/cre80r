@@ -30,7 +30,7 @@ export function FAQ() {
   ];
 
   return (
-    <section id="faq" className="py-24 border-t border-white/[0.06] relative bg-[#0a0b12]/60">
+    <section id="faq" className="py-24 border-t border-white/[0.06] relative bg-transparent">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="text-center space-y-4">
