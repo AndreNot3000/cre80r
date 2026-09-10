@@ -7,7 +7,7 @@ export function FinanceShowcase() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Visual Mockup */}
           <div className="lg:col-span-7 order-2 lg:order-1">
-            <div className="rounded-3xl border border-emerald-500/30 bg-white/[0.03] backdrop-blur-2xl p-5 sm:p-6 shadow-[0_8px_32px_0_rgba(16,185,129,0.12),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-4">
+            <div className="rounded-3xl border border-emerald-500/25 border-t-emerald-400/40 bg-[#0a0d17]/85 backdrop-blur-xl p-5 sm:p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-emerald-400" />
@@ -20,15 +20,15 @@ export function FinanceShowcase() {
 
               {/* Line Items Table Preview */}
               <div className="space-y-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-white/[0.02] flex items-center justify-between">
+                <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between">
                   <span className="text-slate-300">Wedding Cinema Package (Full Day)</span>
                   <span className="font-semibold text-white">₦1,850,000</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.02] flex items-center justify-between">
+                <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between">
                   <span className="text-slate-300">4K Drone Aerial Cinematography</span>
                   <span className="font-semibold text-white">₦250,000</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.02] flex items-center justify-between">
+                <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between">
                   <span className="text-slate-300">Second Camera Operator (Day Rate)</span>
                   <span className="font-semibold text-white">₦150,000</span>
                 </div>

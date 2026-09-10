@@ -97,7 +97,7 @@ export function Features() {
             return (
               <div
                 key={i}
-                className={`${item.colSpan} relative rounded-3xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.12] p-8 overflow-hidden group hover:border-white/[0.25] hover:bg-white/[0.05] transition-all duration-300 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col justify-between`}
+                className={`${item.colSpan} relative rounded-3xl bg-[#0b0d17]/80 backdrop-blur-xl border border-white/[0.08] border-t-white/[0.18] p-8 overflow-hidden group hover:border-white/[0.22] hover:bg-[#0e101d]/90 transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_16px_50px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.18)] flex flex-col justify-between`}
               >
                 {/* Background Gradient Accent */}
                 <div

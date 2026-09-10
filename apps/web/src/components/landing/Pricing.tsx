@@ -82,7 +82,7 @@ export function Pricing() {
           {/* Toggle Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             {/* Monthly / Annual Toggle */}
-            <div className="flex items-center p-1 rounded-xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+            <div className="flex items-center p-1 rounded-xl bg-[#0e101c]/80 backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
               <button
                 onClick={() => setIsAnnual(false)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition ${
@@ -107,7 +107,7 @@ export function Pricing() {
             </div>
 
             {/* Currency Selector */}
-            <div className="flex items-center p-1 rounded-xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+            <div className="flex items-center p-1 rounded-xl bg-[#0e101c]/80 backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
               <button
                 onClick={() => setCurrency("NGN")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
@@ -135,8 +135,8 @@ export function Pricing() {
               key={i}
               className={`rounded-3xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
                 plan.popular
-                  ? "bg-gradient-to-b from-violet-950/40 via-white/[0.05] to-cyan-950/20 border-2 border-violet-500/80 backdrop-blur-2xl shadow-[0_8px_40px_rgba(124,58,237,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)] lg:-translate-y-3"
-                  : "bg-white/[0.03] backdrop-blur-2xl border border-white/[0.12] hover:border-white/[0.25] hover:bg-white/[0.05] shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                  ? "bg-gradient-to-b from-[#141628]/95 via-[#0e101c]/90 to-[#0a0b14]/95 border-2 border-violet-500/80 backdrop-blur-xl shadow-[0_16px_60px_rgba(124,58,237,0.25),inset_0_1px_0_rgba(255,255,255,0.18)] lg:-translate-y-3"
+                  : "bg-[#0c0d17]/85 backdrop-blur-xl border border-white/[0.08] border-t-white/[0.18] hover:border-white/[0.22] hover:bg-[#0f111d]/90 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]"
               }`}
             >
               {plan.popular && (

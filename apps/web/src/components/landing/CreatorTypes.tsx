@@ -87,7 +87,7 @@ export function CreatorTypes() {
                 className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-semibold transition-all ${
                   isSelected
                     ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-[0_0_25px_rgba(124,58,237,0.4)] scale-105"
-                    : "bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06] border border-white/[0.08]"
+                    : "bg-[#0c0d18]/80 text-slate-400 hover:text-white hover:bg-[#121424]/90 border border-white/[0.08] backdrop-blur-md"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -101,7 +101,7 @@ export function CreatorTypes() {
         {(() => {
           const current = creators[activeType] || creators[0]!;
           return (
-            <div className="max-w-4xl mx-auto rounded-3xl border border-violet-500/30 bg-white/[0.03] backdrop-blur-2xl p-8 shadow-[0_8px_32px_0_rgba(124,58,237,0.15),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-6">
+            <div className="max-w-4xl mx-auto rounded-3xl border border-violet-500/30 border-t-violet-400/40 bg-[#0c0d18]/85 backdrop-blur-xl p-8 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/[0.06]">
                 <div>
                   <span className="text-xs font-mono text-cyan-400 font-semibold uppercase tracking-wider">
@@ -120,7 +120,7 @@ export function CreatorTypes() {
                 {current.bullets.map((bullet, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2"
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] space-y-2"
                   >
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                     <p className="text-xs text-slate-300 leading-relaxed font-medium">

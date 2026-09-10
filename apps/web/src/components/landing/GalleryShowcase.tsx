@@ -7,7 +7,7 @@ export function GalleryShowcase() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Visual Mockup */}
           <div className="lg:col-span-7 order-2 lg:order-1">
-            <div className="rounded-3xl border border-pink-500/30 bg-white/[0.03] backdrop-blur-2xl p-5 sm:p-6 shadow-[0_8px_32px_0_rgba(236,72,153,0.12),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-4">
+            <div className="rounded-3xl border border-pink-500/25 border-t-pink-400/40 bg-[#0d0c18]/85 backdrop-blur-xl p-5 sm:p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
                 <div className="flex items-center gap-2">
                   <div className="text-xs font-bold text-white flex items-center gap-2">

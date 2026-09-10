@@ -36,7 +36,7 @@ export function VideoReviewShowcase() {
 
           {/* Right Visual Mockup */}
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-indigo-500/30 bg-white/[0.03] backdrop-blur-2xl p-5 sm:p-6 shadow-[0_8px_32px_0_rgba(99,102,241,0.15),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-4">
+            <div className="rounded-3xl border border-indigo-500/25 border-t-indigo-400/40 bg-[#0c0d18]/85 backdrop-blur-xl p-5 sm:p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] space-y-4">
               {/* Video Player Frame Mockup */}
               <div className="h-52 sm:h-64 rounded-xl bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 border border-white/[0.08] relative flex items-center justify-center overflow-hidden">
                 <div className="w-14 h-14 rounded-full bg-indigo-600/80 text-white flex items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.6)] cursor-pointer hover:scale-110 transition-transform">

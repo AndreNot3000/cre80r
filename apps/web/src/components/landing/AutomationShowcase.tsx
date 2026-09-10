@@ -7,28 +7,28 @@ export function AutomationShowcase() {
       title: "Client Books Wedding Package & Pays 70% Deposit",
       desc: "Paystack webhook confirms deposit payment in NGN instantly.",
       icon: Zap,
-      accent: "border-cyan-500/40 bg-cyan-950/20 text-cyan-400",
+      accent: "border-cyan-500/30 border-t-cyan-400/50 bg-[#0a101d]/85 text-cyan-400 shadow-[0_12px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]",
     },
     {
       type: "ACTION 1",
       title: "Generate E-Sign Contract with Client & Pricing Data",
       desc: "Auto-fills wedding date, cancellation terms, and sends digital signature link.",
       icon: FileText,
-      accent: "border-violet-500/40 bg-violet-950/20 text-violet-400",
+      accent: "border-violet-500/30 border-t-violet-400/50 bg-[#0f0d1e]/85 text-violet-400 shadow-[0_12px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]",
     },
     {
       type: "ACTION 2",
       title: "Create Production Workspace & Assign Crew Tasks",
       desc: "Sets up shoot checklist, equipment call sheet, and assigns 2nd shooter.",
       icon: FolderKanban,
-      accent: "border-indigo-500/40 bg-indigo-950/20 text-indigo-400",
+      accent: "border-indigo-500/30 border-t-indigo-400/50 bg-[#0c0f22]/85 text-indigo-400 shadow-[0_12px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]",
     },
     {
       type: "ACTION 3",
       title: "Send WhatsApp Questionnaire & Calendar Invitation",
       desc: "Sends venue questionnaire link directly to the couple on WhatsApp.",
       icon: MessageSquare,
-      accent: "border-emerald-500/40 bg-emerald-950/20 text-emerald-400",
+      accent: "border-emerald-500/30 border-t-emerald-400/50 bg-[#091316]/85 text-emerald-400 shadow-[0_12px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]",
     },
   ];
 
@@ -55,7 +55,7 @@ export function AutomationShowcase() {
             const Icon = step.icon;
             return (
               <div key={i} className="flex flex-col items-center">
-                <div className={`w-full p-5 rounded-2xl border ${step.accent} backdrop-blur-xl flex items-center justify-between shadow-lg`}>
+                <div className={`w-full p-5 rounded-2xl border ${step.accent} backdrop-blur-xl flex items-center justify-between`}>
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-black/40 flex items-center justify-center">
                       <Icon className="w-5 h-5" />

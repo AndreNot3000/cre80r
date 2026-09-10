@@ -37,7 +37,7 @@ export function CRMShowcase() {
 
           {/* Right Visual Mockup */}
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-white/[0.14] bg-white/[0.03] backdrop-blur-2xl p-5 sm:p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.12)] space-y-4">
+            <div className="rounded-3xl border border-white/[0.08] border-t-white/[0.18] bg-[#0c0d17]/85 backdrop-blur-xl p-5 sm:p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] space-y-4">
               {/* Client Profile Header */}
               <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
                 <div className="flex items-center gap-3">
