@@ -64,7 +64,7 @@ const defaultTasks: TaskItem[] = [
 export default function ProjectDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const id = params.id as string;
+  const id = (params?.id as string) || "";
 
   const [project, setProject] = useState<any>(null);
   const [callSheet, setCallSheet] = useState<any>(null);
