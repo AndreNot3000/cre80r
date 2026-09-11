@@ -31,6 +31,7 @@ import {
   PieChart,
   Eye,
   X,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { LogExpenseModal } from "@/components/expenses/log-expense-modal";
@@ -437,21 +438,41 @@ export default function ExpensesPage() {
                 <Receipt className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">No expenses logged</h3>
+                <h3 className="text-base font-bold text-white">
+                  {expenses.length === 0 ? "No expenses logged" : "No matching expenses found"}
+                </h3>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                  Log gear rentals, assistant camera day rates, location bookings, or fuel costs.
+                  {expenses.length === 0
+                    ? "Log gear rentals, assistant camera day rates, location bookings, or fuel costs."
+                    : search || selectedCategory !== "All"
+                    ? `No expenses found${selectedCategory !== "All" ? ` in category "${selectedCategory}"` : ""}${search ? ` matching "${search}"` : ""}. Try resetting your filters.`
+                    : "No expenses found in this view."}
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setEditingExpense(null);
-                  setIsLogModalOpen(true);
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Log First Expense
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {expenses.length > 0 && (search || selectedCategory !== "All") && (
+                  <button
+                    onClick={() => {
+                      setSearch("");
+                      setSelectedCategory("All");
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                    Reset Filters
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setEditingExpense(null);
+                    setIsLogModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  {expenses.length === 0 ? "Log First Expense" : "Log New Expense"}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="bg-[#0c0d17] rounded-3xl border border-white/[0.08] overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]">

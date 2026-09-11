@@ -19,6 +19,7 @@ import {
   Tag,
   Loader2,
   ChevronRight,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AddClientModal } from "@/components/clients/add-client-modal";
@@ -294,20 +295,38 @@ export default function ClientsPage() {
               <Users className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">No clients found</h3>
+              <h3 className="text-base font-bold text-white">
+                {clients.length === 0 ? "No clients found" : "No matching clients found"}
+              </h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                {search || selectedTag !== "All"
-                  ? "Try changing your search terms or filter tags."
-                  : "Start by adding your first client or connecting your booking page."}
+                {clients.length === 0
+                  ? "Start by adding your first client or connecting your booking page."
+                  : search || selectedTag !== "All"
+                  ? `No clients found${selectedTag !== "All" ? ` with tag "${selectedTag}"` : ""}${search ? ` matching "${search}"` : ""}. Try resetting your filters.`
+                  : "No clients found in this view."}
               </p>
             </div>
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Add First Client
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {clients.length > 0 && (search || selectedTag !== "All") && (
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setSelectedTag("All");
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                  Reset Filters
+                </button>
+              )}
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {clients.length === 0 ? "Add First Client" : "Add New Client"}
+              </button>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">

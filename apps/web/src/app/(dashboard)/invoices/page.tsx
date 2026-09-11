@@ -18,6 +18,7 @@ import {
   CreditCard,
   Sparkles,
   Copy,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateInvoiceModal } from "@/components/invoices/create-invoice-modal";
@@ -266,20 +267,38 @@ export default function InvoicesPage() {
               <Receipt className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">No invoices found</h3>
+              <h3 className="text-base font-bold text-white">
+                {invoices.length === 0 ? "No invoices found" : "No matching invoices found"}
+              </h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                {search || activeTab !== "all"
-                  ? "Try changing your search terms or status filter."
-                  : "Create invoices for shoots, retainer milestones, or convert accepted proposals."}
+                {invoices.length === 0
+                  ? "Create invoices for shoots, retainer milestones, or convert accepted proposals."
+                  : search || activeTab !== "all"
+                  ? `No invoices found${activeTab !== "all" ? ` with status "${activeTab}"` : ""}${search ? ` matching "${search}"` : ""}. Try resetting your filters.`
+                  : "No invoices found in this view."}
               </p>
             </div>
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-[0_0_15px_rgba(16,185,129,0.3)]"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Create First Invoice
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {invoices.length > 0 && (search || activeTab !== "all") && (
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setActiveTab("all");
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                  Reset Filters
+                </button>
+              )}
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {invoices.length === 0 ? "Create First Invoice" : "Create New Invoice"}
+              </button>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">

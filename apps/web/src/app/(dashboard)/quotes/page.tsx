@@ -18,6 +18,7 @@ import {
   DollarSign,
   Loader2,
   XCircle,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -243,20 +244,38 @@ export default function QuotesPage() {
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">No proposals found</h3>
+              <h3 className="text-base font-bold text-white">
+                {quotes.length === 0 ? "No proposals found" : "No matching proposals found"}
+              </h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                {search || activeTab !== "all"
-                  ? "Try changing your search terms or status filter."
-                  : "Create and send your first professional proposal with automatic math and milestones."}
+                {quotes.length === 0
+                  ? "Create and send your first professional proposal with automatic math and milestones."
+                  : search || activeTab !== "all"
+                  ? `No proposals found${activeTab !== "all" ? ` with status "${activeTab}"` : ""}${search ? ` matching "${search}"` : ""}. Try resetting your filters.`
+                  : "No proposals found in this view."}
               </p>
             </div>
-            <Link
-              href="/quotes/new"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Create First Proposal
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {quotes.length > 0 && (search || activeTab !== "all") && (
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setActiveTab("all");
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                  Reset Filters
+                </button>
+              )}
+              <Link
+                href="/quotes/new"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {quotes.length === 0 ? "Create First Proposal" : "Create New Proposal"}
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">

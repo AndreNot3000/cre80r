@@ -21,6 +21,7 @@ import {
   Layers,
   Loader2,
   Film,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateProjectModal } from "@/components/projects/create-project-modal";
@@ -285,23 +286,41 @@ export default function ProjectsPage() {
             <FolderKanban className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">No projects found</h3>
+            <h3 className="text-base font-bold text-white">
+              {projects.length === 0 ? "No projects yet" : "No matching projects found"}
+            </h3>
             <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-              {search || filterStatus !== "all"
-                ? "Try changing your search terms or status filter."
-                : "Launch a new project workspace to track shoot dates, digital call sheets, and editing stages."}
+              {projects.length === 0
+                ? "Launch your first project workspace to track shoot dates, digital call sheets, and editing stages."
+                : search || filterStatus !== "all"
+                ? `No projects found${filterStatus !== "all" ? ` in "${STAGES.find((s) => s.id === filterStatus)?.label || filterStatus}"` : ""}${search ? ` matching "${search}"` : ""}. Try resetting your filters.`
+                : "No projects found in this view."}
             </p>
           </div>
-          <button
-            onClick={() => {
-              setEditingProject(null);
-              setIsCreateModalOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Launch First Project
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {projects.length > 0 && (search || filterStatus !== "all") && (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setFilterStatus("all");
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                Reset Filters
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setEditingProject(null);
+                setIsCreateModalOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              {projects.length === 0 ? "Launch First Project" : "Launch New Project"}
+            </button>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

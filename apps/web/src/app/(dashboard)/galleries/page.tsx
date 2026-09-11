@@ -26,6 +26,7 @@ import {
   MessageSquare,
   Play,
   Clock,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateGalleryModal } from "@/components/galleries/create-gallery-modal";
@@ -399,21 +400,38 @@ export default function GalleriesPage() {
                 <ImageIcon className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">No photo galleries found</h3>
+                <h3 className="text-base font-bold text-white">
+                  {galleries.length === 0 ? "No photo galleries found" : "No matching galleries found"}
+                </h3>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                  Create a branded 4K gallery for your wedding, fashion, or corporate clients.
+                  {galleries.length === 0
+                    ? "Create a branded 4K gallery for your wedding, fashion, or corporate clients."
+                    : search
+                    ? `No galleries found matching "${search}". Try resetting your search.`
+                    : "No photo galleries found in this view."}
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setEditingGallery(null);
-                  setIsCreateGalleryOpen(true);
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Create First Gallery
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {galleries.length > 0 && search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                    Reset Search
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setEditingGallery(null);
+                    setIsCreateGalleryOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  {galleries.length === 0 ? "Create First Gallery" : "Create New Gallery"}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -567,18 +585,35 @@ export default function GalleriesPage() {
                 <Film className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">No video reviews found</h3>
+                <h3 className="text-base font-bold text-white">
+                  {videoReviews.length === 0 ? "No video reviews found" : "No matching video reviews found"}
+                </h3>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                  Upload or link a video cut to enable frame-accurate timestamped client reviews.
+                  {videoReviews.length === 0
+                    ? "Upload or link a video cut to enable frame-accurate timestamped client reviews."
+                    : search
+                    ? `No video reviews found matching "${search}". Try resetting your search.`
+                    : "No video reviews found in this view."}
                 </p>
               </div>
-              <button
-                onClick={() => setIsCreateReviewOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Launch First Video Cut
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {videoReviews.length > 0 && search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white transition"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                    Reset Search
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsCreateReviewOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  {videoReviews.length === 0 ? "Launch First Video Cut" : "Launch New Video Cut"}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
