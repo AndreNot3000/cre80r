@@ -153,11 +153,11 @@ export function CreateProjectModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="bg-[#0c0d17] border border-white/[0.1] rounded-3xl w-full max-w-xl shadow-[0_0_60px_rgba(0,0,0,0.9)] overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-[#0c0d18]/95 backdrop-blur-2xl border border-white/[0.12] border-t-white/[0.25] rounded-3xl w-full max-w-xl shadow-[0_24px_80px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.15)] overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08] bg-white/[0.01]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-300 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-violet-500/10 border border-violet-500/25 text-violet-300 flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.2)]">
               <FolderKanban className="w-4 h-4" />
             </div>
             <div>
