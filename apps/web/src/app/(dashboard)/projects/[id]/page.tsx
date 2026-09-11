@@ -37,6 +37,8 @@ import {
   PackageCheck,
   RotateCcw,
   SlidersHorizontal,
+  Trash2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -79,6 +81,22 @@ export default function ProjectDetailPage() {
   const [gearSearch, setGearSearch] = useState<string>("");
   const [projectExpenses, setProjectExpenses] = useState<any[]>([]);
   const [projectInvoices, setProjectInvoices] = useState<any[]>([]);
+
+  // Modals for adding Crew, Schedule Beat, and Gear
+  const [isAddCrewModalOpen, setIsAddCrewModalOpen] = useState(false);
+  const [newCrewName, setNewCrewName] = useState("");
+  const [newCrewRole, setNewCrewRole] = useState("Camera Operator");
+  const [newCrewCallTime, setNewCrewCallTime] = useState("07:00 AM");
+  const [newCrewPhone, setNewCrewPhone] = useState("");
+
+  const [isAddBeatModalOpen, setIsAddBeatModalOpen] = useState(false);
+  const [newBeatTime, setNewBeatTime] = useState("09:00 AM");
+  const [newBeatScene, setNewBeatScene] = useState("");
+  const [newBeatNotes, setNewBeatNotes] = useState("");
+
+  const [isAddGearModalOpen, setIsAddGearModalOpen] = useState(false);
+  const [newGearItem, setNewGearItem] = useState("");
+  const [newGearCategory, setNewGearCategory] = useState("Camera");
 
   const fetchProjectData = async () => {
     try {
@@ -243,6 +261,166 @@ export default function ProjectDetailPage() {
       `🔗 *Full Digital Call Sheet:* ${origin}/c/${id}`;
 
     window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handleAddCrewMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCrewName.trim()) {
+      toast.error("Please enter crew member's name");
+      return;
+    }
+    const newMember = {
+      name: newCrewName.trim(),
+      role: newCrewRole.trim() || "Crew",
+      callTime: newCrewCallTime.trim() || "07:30 AM",
+      phone: newCrewPhone.trim() || null,
+    };
+
+    const currentCrew = Array.isArray(callSheet?.crew) ? callSheet.crew : [];
+    const updatedCrew = [...currentCrew, newMember];
+
+    setCallSheet((prev: any) => ({ ...prev, crew: updatedCrew }));
+    setIsAddCrewModalOpen(false);
+    setNewCrewName("");
+    setNewCrewPhone("");
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ crew: updatedCrew }),
+      });
+      if (!res.ok) throw new Error("Failed to save crew member");
+      toast.success(`${newMember.name} added to Crew Roster!`);
+    } catch (err) {
+      toast.error("Failed to sync crew roster with server");
+      setCallSheet((prev: any) => ({ ...prev, crew: currentCrew }));
+    }
+  };
+
+  const handleDeleteCrewMember = async (index: number) => {
+    const currentCrew = Array.isArray(callSheet?.crew) ? callSheet.crew : [];
+    const memberToDelete = currentCrew[index];
+    const updatedCrew = currentCrew.filter((_: any, i: number) => i !== index);
+
+    setCallSheet((prev: any) => ({ ...prev, crew: updatedCrew }));
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ crew: updatedCrew }),
+      });
+      if (!res.ok) throw new Error("Failed to delete crew member");
+      toast.success(`Removed ${memberToDelete.name}`);
+    } catch (err) {
+      toast.error("Failed to sync deletion");
+      setCallSheet((prev: any) => ({ ...prev, crew: currentCrew }));
+    }
+  };
+
+  const handleAddScheduleBeat = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newBeatScene.trim()) {
+      toast.error("Please enter scene description or beat title");
+      return;
+    }
+    const newBeat = {
+      time: newBeatTime.trim() || "08:00 AM",
+      scene: newBeatScene.trim(),
+      notes: newBeatNotes.trim() || null,
+    };
+
+    const currentSchedule = Array.isArray(callSheet?.schedule) ? callSheet.schedule : [];
+    const updatedSchedule = [...currentSchedule, newBeat];
+
+    setCallSheet((prev: any) => ({ ...prev, schedule: updatedSchedule }));
+    setIsAddBeatModalOpen(false);
+    setNewBeatScene("");
+    setNewBeatNotes("");
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ schedule: updatedSchedule }),
+      });
+      if (!res.ok) throw new Error("Failed to save schedule beat");
+      toast.success("Schedule beat added to timeline!");
+    } catch (err) {
+      toast.error("Failed to sync schedule beat");
+      setCallSheet((prev: any) => ({ ...prev, schedule: currentSchedule }));
+    }
+  };
+
+  const handleDeleteScheduleBeat = async (index: number) => {
+    const currentSchedule = Array.isArray(callSheet?.schedule) ? callSheet.schedule : [];
+    const updatedSchedule = currentSchedule.filter((_: any, i: number) => i !== index);
+
+    setCallSheet((prev: any) => ({ ...prev, schedule: updatedSchedule }));
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ schedule: updatedSchedule }),
+      });
+      if (!res.ok) throw new Error("Failed to delete beat");
+      toast.success("Schedule beat removed");
+    } catch (err) {
+      toast.error("Failed to sync schedule deletion");
+      setCallSheet((prev: any) => ({ ...prev, schedule: currentSchedule }));
+    }
+  };
+
+  const handleAddGearItem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGearItem.trim()) {
+      toast.error("Please enter equipment name");
+      return;
+    }
+    const newItem = {
+      category: newGearCategory.trim() || "Camera",
+      item: newGearItem.trim(),
+      packed: false,
+    };
+
+    const updatedGear = [...gearList, newItem];
+    setGearList(updatedGear);
+    setIsAddGearModalOpen(false);
+    setNewGearItem("");
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gearList: updatedGear }),
+      });
+      if (!res.ok) throw new Error("Failed to save gear item");
+      toast.success(`${newItem.item} added to gear checklist!`);
+    } catch (err) {
+      toast.error("Failed to sync gear checklist");
+      setGearList(gearList);
+    }
+  };
+
+  const handleDeleteGearItem = async (index: number) => {
+    const itemToDelete = gearList[index];
+    const updatedGear = gearList.filter((_: any, i: number) => i !== index);
+    setGearList(updatedGear);
+
+    try {
+      const res = await fetch(`/api/projects/${id}/callsheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gearList: updatedGear }),
+      });
+      if (!res.ok) throw new Error("Failed to delete gear");
+      toast.success(`Removed ${itemToDelete.item}`);
+    } catch (err) {
+      toast.error("Failed to sync gear deletion");
+      setGearList(gearList);
+    }
   };
 
   const toggleGearPacked = (index: number) => {
@@ -589,9 +767,18 @@ export default function ProjectDetailPage() {
                       <Clock className="w-4 h-4 text-cyan-400" />
                       Shooting Schedule Timeline
                     </h3>
-                    <span className="text-[10px] font-mono font-bold text-slate-400">
-                      {Array.isArray(callSheet.schedule) ? callSheet.schedule.length : 0} Planned Beats
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold text-slate-400">
+                        {Array.isArray(callSheet.schedule) ? callSheet.schedule.length : 0} Planned Beats
+                      </span>
+                      <button
+                        onClick={() => setIsAddBeatModalOpen(true)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/30 hover:bg-cyan-500/25 text-cyan-300 text-xs font-semibold transition"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Beat</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="relative pl-3 space-y-3 text-xs before:absolute before:left-1 before:top-2 before:bottom-2 before:w-[2px] before:bg-white/[0.08]">
@@ -611,9 +798,18 @@ export default function ProjectDetailPage() {
                               </div>
                               {item.notes && <div className="text-[11px] text-slate-400 mt-0.5">{item.notes}</div>}
                             </div>
-                            <span className="font-mono font-bold text-cyan-300 text-xs px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 shrink-0">
-                              {item.time}
-                            </span>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="font-mono font-bold text-cyan-300 text-xs px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20">
+                                {item.time}
+                              </span>
+                              <button
+                                onClick={() => handleDeleteScheduleBeat(i)}
+                                className="w-6 h-6 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                                title="Delete beat"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -627,9 +823,18 @@ export default function ProjectDetailPage() {
                       <Users className="w-4 h-4 text-violet-400" />
                       Crew Call Times & Contacts
                     </h3>
-                    <span className="text-[10px] font-mono text-slate-400">
-                      {Array.isArray(callSheet.crew) ? callSheet.crew.length : 0} Assigned Crew
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-slate-400">
+                        {Array.isArray(callSheet.crew) ? callSheet.crew.length : 0} Assigned Crew
+                      </span>
+                      <button
+                        onClick={() => setIsAddCrewModalOpen(true)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-500/15 border border-violet-500/30 hover:bg-violet-500/25 text-violet-300 text-xs font-semibold transition"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Crew</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="space-y-2.5 text-xs">
@@ -637,7 +842,7 @@ export default function ProjectDetailPage() {
                       callSheet.crew.map((member: any, i: number) => (
                         <div
                           key={i}
-                          className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between gap-3 hover:border-white/[0.1] transition"
+                          className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between gap-3 hover:border-white/[0.1] transition group"
                         >
                           <div>
                             <div className="font-bold text-white flex items-center gap-1.5">
@@ -671,6 +876,13 @@ export default function ProjectDetailPage() {
                                 </a>
                               </>
                             )}
+                            <button
+                              onClick={() => handleDeleteCrewMember(i)}
+                              className="w-8 h-8 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-rose-500/15 hover:border-rose-500/30 text-slate-500 hover:text-rose-300 flex items-center justify-center transition"
+                              title={`Remove ${member.name}`}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -693,7 +905,14 @@ export default function ProjectDetailPage() {
                     </div>
 
                     {/* Bulk Actions */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => setIsAddGearModalOpen(true)}
+                        className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-violet-500/15 border border-violet-500/30 hover:bg-violet-500/25 text-violet-300 transition flex items-center gap-1"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Gear</span>
+                      </button>
                       <button
                         onClick={() => handleBulkPack(true)}
                         className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 hover:bg-emerald-500/25 text-emerald-300 transition flex items-center gap-1"
@@ -761,7 +980,7 @@ export default function ProjectDetailPage() {
                         <div
                           key={i}
                           onClick={() => toggleGearPacked(actualIdx >= 0 ? actualIdx : i)}
-                          className={`p-3 rounded-xl border transition flex items-center justify-between cursor-pointer select-none ${
+                          className={`p-3 rounded-xl border transition flex items-center justify-between cursor-pointer select-none group ${
                             gear.packed
                               ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-200"
                               : "bg-white/[0.02] border-white/[0.06] text-slate-300 hover:border-white/[0.15]"
@@ -775,9 +994,21 @@ export default function ProjectDetailPage() {
                             )}
                             <span className={gear.packed ? "font-semibold" : ""}>{gear.item}</span>
                           </div>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400 shrink-0 ml-2">
-                            {gear.category}
-                          </span>
+                          <div className="flex items-center gap-2 shrink-0 ml-2">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400">
+                              {gear.category}
+                            </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteGearItem(actualIdx >= 0 ? actualIdx : i);
+                              }}
+                              className="w-6 h-6 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                              title="Delete gear item"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
@@ -1084,6 +1315,266 @@ export default function ProjectDetailPage() {
           </div>
         );
       })()}
+
+      {/* ─── MODAL: ADD CREW MEMBER ────────────────────────────────────────── */}
+      {isAddCrewModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-[#0c0d18]/95 backdrop-blur-2xl border border-white/[0.12] border-t-white/[0.25] rounded-3xl w-full max-w-md shadow-[0_24px_80px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.15)] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08] bg-white/[0.01]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-violet-500/10 border border-violet-500/25 text-violet-300 flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.2)]">
+                  <Users className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Add Crew Member</h3>
+                  <p className="text-xs text-slate-400">Assign role and arrival call time for shoot day.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddCrewModalOpen(false)}
+                className="w-8 h-8 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] text-slate-400 hover:text-white flex items-center justify-center transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddCrewMember} className="p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Full Name <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  required
+                  value={newCrewName}
+                  onChange={(e) => setNewCrewName(e.target.value)}
+                  placeholder="e.g. Tunde Adeleke"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1.5">Department / Role</label>
+                  <select
+                    value={newCrewRole}
+                    onChange={(e) => setNewCrewRole(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-white/[0.08] bg-[#161726] text-white focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                  >
+                    <option value="Director of Photography">Director of Photography (DP)</option>
+                    <option value="Camera Operator">Camera Operator</option>
+                    <option value="Focus Puller / 1st AC">Focus Puller / 1st AC</option>
+                    <option value="Aerial Drone Pilot">Aerial Drone Pilot</option>
+                    <option value="Sound Recordist / Boom">Sound Recordist / Boom</option>
+                    <option value="Gaffer / Lighting Lead">Gaffer / Lighting Lead</option>
+                    <option value="Key Grip">Key Grip</option>
+                    <option value="Production Assistant">Production Assistant (PA)</option>
+                    <option value="Hair & Makeup Artist">Hair & Makeup Artist (HMUA)</option>
+                    <option value="Wardrobe Stylist">Wardrobe Stylist</option>
+                    <option value="DIT / Media Manager">DIT / Media Manager</option>
+                    <option value="BTS Shooter">BTS Photographer / Videographer</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1.5">Individual Call Time</label>
+                  <input
+                    value={newCrewCallTime}
+                    onChange={(e) => setNewCrewCallTime(e.target.value)}
+                    placeholder="e.g. 07:00 AM"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Phone Number (for WhatsApp Dispatch)
+                </label>
+                <input
+                  value={newCrewPhone}
+                  onChange={(e) => setNewCrewPhone(e.target.value)}
+                  placeholder="e.g. +234 803 123 4567"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40 font-mono"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-white/[0.08]">
+                <button
+                  type="button"
+                  onClick={() => setIsAddCrewModalOpen(false)}
+                  className="px-4 py-2 font-semibold text-slate-400 hover:text-white rounded-xl transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold shadow-[0_0_20px_rgba(124,58,237,0.4)] flex items-center gap-1.5 transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add to Crew</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL: ADD SCHEDULE BEAT ────────────────────────────────────────── */}
+      {isAddBeatModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-[#0c0d18]/95 backdrop-blur-2xl border border-white/[0.12] border-t-white/[0.25] rounded-3xl w-full max-w-md shadow-[0_24px_80px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.15)] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08] bg-white/[0.01]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Add Schedule Beat</h3>
+                  <p className="text-xs text-slate-400">Schedule a scene, briefing, or setup milestone.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddBeatModalOpen(false)}
+                className="w-8 h-8 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] text-slate-400 hover:text-white flex items-center justify-center transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddScheduleBeat} className="p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Scheduled Time <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  required
+                  value={newBeatTime}
+                  onChange={(e) => setNewBeatTime(e.target.value)}
+                  placeholder="e.g. 10:30 AM"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40 font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Scene / Activity Title <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  required
+                  value={newBeatScene}
+                  onChange={(e) => setNewBeatScene(e.target.value)}
+                  placeholder="e.g. Scene 3: Bride Entrance & Family Blessings"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Location / Specific Stage Notes
+                </label>
+                <input
+                  value={newBeatNotes}
+                  onChange={(e) => setNewBeatNotes(e.target.value)}
+                  placeholder="e.g. Main Hall - Center Aisle"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-white/[0.08]">
+                <button
+                  type="button"
+                  onClick={() => setIsAddBeatModalOpen(false)}
+                  className="px-4 py-2 font-semibold text-slate-400 hover:text-white rounded-xl transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center gap-1.5 transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Beat</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL: ADD EQUIPMENT / GEAR ────────────────────────────────────── */}
+      {isAddGearModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-[#0c0d18]/95 backdrop-blur-2xl border border-white/[0.12] border-t-white/[0.25] rounded-3xl w-full max-w-md shadow-[0_24px_80px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.15)] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08] bg-white/[0.01]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                  <Camera className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Add Equipment to Manifest</h3>
+                  <p className="text-xs text-slate-400">Track equipment packing before departure.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddGearModalOpen(false)}
+                className="w-8 h-8 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] text-slate-400 hover:text-white flex items-center justify-center transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddGearItem} className="p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">
+                  Equipment / Gear Name <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  required
+                  value={newGearItem}
+                  onChange={(e) => setNewGearItem(e.target.value)}
+                  placeholder="e.g. Sony FX6 Cinema Camera or Aputure 600d"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1.5">Category</label>
+                <select
+                  value={newGearCategory}
+                  onChange={(e) => setNewGearCategory(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-white/[0.08] bg-[#161726] text-white focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                >
+                  <option value="Camera">Camera</option>
+                  <option value="Lenses">Lenses</option>
+                  <option value="Lighting">Lighting</option>
+                  <option value="Audio">Audio</option>
+                  <option value="Drone">Drone</option>
+                  <option value="Power">Power & Batteries</option>
+                  <option value="Grip">Grip & Support</option>
+                  <option value="Accessories">Accessories</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-white/[0.08]">
+                <button
+                  type="button"
+                  onClick={() => setIsAddGearModalOpen(false)}
+                  className="px-4 py-2 font-semibold text-slate-400 hover:text-white rounded-xl transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-1.5 transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Equipment</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
